@@ -4,12 +4,11 @@
  * @date 2025-09-16
  */
 
-
 #include <iostream>
 #include "program_runner.h"
 
 void ShowHelp(std::ostream& out) {
-    out << "Usage: DS Expressions 2 [options]\n"
+    out << "Usage: moviesearch [options]\n"
         << "Options:\n"
         << "  -h, --help                  Show this help message and exit\n"
         << "  -n, --no-menu -d --debug    Run in non-interactive mode\n"
