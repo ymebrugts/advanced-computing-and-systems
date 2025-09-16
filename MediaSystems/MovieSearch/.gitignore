@@ -42,3 +42,5 @@ ipch
 .vs/
 
 main
+
+*.dat
