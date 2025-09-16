@@ -142,13 +142,20 @@
   <ItemGroup>
     <ClInclude Include="framework.h" />
     <ClInclude Include="src\moviesearch.h" />
+    <ClInclude Include="src\utils\cmdline_utils.h" />
+    <ClInclude Include="src\utils\container_utils.h" />
+    <ClInclude Include="src\utils\container_utils_impl.h" />
     <ClInclude Include="src\utils\find_by_member.h" />
     <ClInclude Include="src\utils\sort_by_member.h" />
     <ClInclude Include="src\utils\string_trim.h" />
+    <ClInclude Include="src\utils\string_utils.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\moviesearch.cpp" />
+    <ClCompile Include="src\utils\cmdline_utils.cpp" />
+    <ClCompile Include="src\utils\container_utils.cpp" />
     <ClCompile Include="src\utils\string_trim.cpp" />
+    <ClCompile Include="src\utils\string_utils.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

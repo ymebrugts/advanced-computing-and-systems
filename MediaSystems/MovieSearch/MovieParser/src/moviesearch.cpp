@@ -1,4 +1,7 @@
 ﻿#include "moviesearch.h"
+#include "utils/string_utils.h"
+#include "utils/cmdline_utils.h"
+#include "utils/container_utils.h"
 
 #include <algorithm>
 #include <cctype>
@@ -8,91 +11,9 @@
 
 namespace moviesearch {
 
-    namespace {
-
-        // ---------- small string helpers ----------
-        static inline std::string ltrim(std::string s) {
-            s.erase(s.begin(), std::find_if(s.begin(), s.end(),
-                [](unsigned char ch) { return !std::isspace(ch); }));
-            return s;
-        }
-        static inline std::string rtrim(std::string s) {
-            s.erase(std::find_if(s.rbegin(), s.rend(),
-                [](unsigned char ch) { return !std::isspace(ch); }).base(), s.end());
-            return s;
-        }
-        static inline std::string trim(std::string s) { return rtrim(ltrim(std::move(s))); }
-
-        static inline void replaceAll(std::string& s, const std::string& from, const std::string& to) {
-            if (from.empty()) return;
-            std::size_t pos = 0;
-            while ((pos = s.find(from, pos)) != std::string::npos) {
-                s.replace(pos, from.size(), to);
-                pos += to.size();
-            }
-        }
-
-        // UTF‑8 normalize en/em dash to ASCII hyphen-minus
-        static inline void normalize_dashes(std::string& s) {
-            replaceAll(s, "\xE2\x80\x93", "-"); // – en
-            replaceAll(s, "\xE2\x80\x94", "-"); // — em
-            // best-effort if compiler/source lets these appear directly
-            replaceAll(s, "–", "-");
-            replaceAll(s, "—", "-");
-        }
-
-        static inline bool token_is_option(const std::string& t) {
-            return t.size() >= 2 && t[0] == '-';
-        }
-        static inline bool matches_option(const std::string& tok, const std::string& name) {
-            if (tok.size() < 2 || tok[0] != '-') return false;
-            std::size_t i = (tok.size() >= 3 && tok[1] == '-') ? 2 : 1;
-            return tok.substr(i) == name;
-        }
-
-        static inline std::pair<std::string, std::string> split_opt_equals(const std::string& tok) {
-            auto p = tok.find('=');
-            if (p == std::string::npos) return { tok, "" };
-            return { tok.substr(0, p), tok.substr(p + 1) };
-        }
-
-        // Return contiguous non-option tokens as separate items (preserves words)
-        static std::vector<std::string> collect_value_tokens(const std::vector<std::string>& tokens, std::size_t& i) {
-            std::vector<std::string> vals;
-            while (i < tokens.size() && !token_is_option(tokens[i])) {
-                if (!tokens[i].empty()) vals.push_back(tokens[i]);
-                ++i;
-            }
-            return vals;
-        }
-
-        static std::vector<std::string> split_commas_preserve(const std::string& s) {
-            std::vector<std::string> out;
-            std::string item;
-            std::istringstream iss(s);
-            while (std::getline(iss, item, ',')) {
-                item = trim(item);
-                if (!item.empty()) out.push_back(item);
-            }
-            return out;
-        }
-
-        template <class Seq>
-        static void dedupe_preserve_order(Seq& v) {
-            std::unordered_set<std::string> seen;
-            Seq out;
-            out.reserve(v.size());
-            for (auto& x : v) {
-                if (seen.insert(x).second) out.push_back(std::move(x));
-            }
-            v.swap(out);
-        }
-
-    } // namespace
-
     std::vector<std::string> tokenize_command_line(const std::string& raw) {
         std::string line = raw;
-        normalize_dashes(line);
+        utils::normalize_dashes(line);
 
         std::vector<std::string> tokens;
         std::string cur;
@@ -146,8 +67,8 @@ namespace moviesearch {
         std::vector<std::string> args;
         args.reserve(rawArgs.size());
         for (const auto& t : rawArgs) {
-            auto [opt, attached] = split_opt_equals(t);
-            if (!attached.empty() && token_is_option(opt)) {
+            auto [opt, attached] = utils::split_opt_equals(t);
+            if (!attached.empty() && utils::token_is_option(opt)) {
                 args.push_back(opt);
                 args.push_back(attached);
             }
@@ -159,12 +80,12 @@ namespace moviesearch {
         std::size_t i = 0;
         while (i < args.size()) {
             const std::string tok = args[i++];
-            if (!token_is_option(tok)) {
+            if (!utils::token_is_option(tok)) {
                 res.warnings.push_back("Ignoring unexpected token: '" + tok + "'");
                 continue;
             }
-            if (matches_option(tok, "title")) {
-                auto vals = collect_value_tokens(args, i);
+            if (utils::matches_option(tok, "title")) {
+                auto vals = utils::collect_value_tokens(args, i);
                 if (vals.empty()) {
                     res.errors.push_back("Missing value for --title");
                     continue;
@@ -172,13 +93,13 @@ namespace moviesearch {
                 // Treat whitespace-separated words as required keywords; quoted phrases stay intact.
                 for (const auto& v : vals) {
                     // If the user wanted to pass comma-separated title tokens, accept those too.
-                    auto parts = split_commas_preserve(v);
+                    auto parts = utils::split_commas_preserve(v);
                     if (parts.empty()) q.title_keywords.push_back(v);
                     else q.title_keywords.insert(q.title_keywords.end(), parts.begin(), parts.end());
                 }
             }
-            else if (matches_option(tok, "year")) {
-                auto vals = collect_value_tokens(args, i);
+            else if (utils::matches_option(tok, "year")) {
+                auto vals = utils::collect_value_tokens(args, i);
                 if (vals.empty()) {
                     res.errors.push_back("Missing value for --year");
                     continue;
@@ -196,26 +117,26 @@ namespace moviesearch {
                     res.errors.push_back("Invalid year: '" + vals.front() + "'");
                 }
             }
-            else if (matches_option(tok, "genre") || matches_option(tok, "genres")) {
-                auto vals = collect_value_tokens(args, i);
+            else if (utils::matches_option(tok, "genre") || utils::matches_option(tok, "genres")) {
+                auto vals = utils::collect_value_tokens(args, i);
                 if (vals.empty()) {
                     res.errors.push_back("Missing value for --genre");
                     continue;
                 }
                 for (const auto& v : vals) {
-                    auto parts = split_commas_preserve(v);
+                    auto parts = utils::split_commas_preserve(v);
                     if (parts.empty()) q.genres.push_back(v);
                     else q.genres.insert(q.genres.end(), parts.begin(), parts.end());
                 }
             }
-            else if (matches_option(tok, "tag") || matches_option(tok, "tags")) {
-                auto vals = collect_value_tokens(args, i);
+            else if (utils::matches_option(tok, "tag") || utils::matches_option(tok, "tags")) {
+                auto vals = utils::collect_value_tokens(args, i);
                 if (vals.empty()) {
                     res.errors.push_back("Missing value for --tag");
                     continue;
                 }
                 for (const auto& v : vals) {
-                    auto parts = split_commas_preserve(v);
+                    auto parts = utils::split_commas_preserve(v);
                     if (parts.empty()) q.tags.push_back(v);
                     else q.tags.insert(q.tags.end(), parts.begin(), parts.end());
                 }
@@ -223,7 +144,7 @@ namespace moviesearch {
             else {
                 res.errors.push_back("Unknown option: '" + tok + "'");
                 // skip any following non-option tokens for this unknown flag
-                while (i < args.size() && !token_is_option(args[i])) ++i;
+                while (i < args.size() && !utils::token_is_option(args[i])) ++i;
             }
         }
 
@@ -233,9 +154,9 @@ namespace moviesearch {
         }
 
         // Dedupe lists while preserving order
-        dedupe_preserve_order(q.title_keywords);
-        dedupe_preserve_order(q.genres);
-        dedupe_preserve_order(q.tags);
+        utils::dedupe_preserve_order(q.title_keywords);
+        utils::dedupe_preserve_order(q.genres);
+        utils::dedupe_preserve_order(q.tags);
 
         res.ok = res.errors.empty();
         return res;
