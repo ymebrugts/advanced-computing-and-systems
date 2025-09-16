@@ -241,23 +241,6 @@ namespace moviesearch {
         return res;
     }
 
-    ParseResult parse_moviesearch_line(const std::string& line) {
-        auto tokens = tokenize_command_line(line);
-        if (tokens.empty()) return {};
-        // Accept lines with or without the leading command name
-        if (tokens.front() == "moviesearch") {
-            return parse_moviesearch_tokens({ tokens.begin() + 1, tokens.end() });
-        }
-        else {
-            // If the first token isn't 'moviesearch', emit an error but try to parse as args.
-            ParseResult r = parse_moviesearch_tokens(tokens);
-            if (r.errors.empty()) {
-                r.warnings.push_back("Line did not start with 'moviesearch' — parsed as arguments only");
-            }
-            return r;
-        }
-    }
-
     void print_query(std::ostream& out, const Query& q) {
         out << "Parsed movie search (AND semantics):\n";
         out << "  title_keywords : ";
