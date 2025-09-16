@@ -7,6 +7,16 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MovieSearch", "MovieSearch\
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MovieParser", "MovieParser\MovieParser.vcxproj", "{4EE4093E-F95B-43C5-A8EC-2589B6CA023E}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Dataset", "Dataset", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+	ProjectSection(SolutionItems) = preProject
+		Dataset\allbut.pl = Dataset\allbut.pl
+		Dataset\movies.dat = Dataset\movies.dat
+		Dataset\ratings.dat = Dataset\ratings.dat
+		Dataset\README.html = Dataset\README.html
+		Dataset\split_ratings.sh = Dataset\split_ratings.sh
+		Dataset\tags.dat = Dataset\tags.dat
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
