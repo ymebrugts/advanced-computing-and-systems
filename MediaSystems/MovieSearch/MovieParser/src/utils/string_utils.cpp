@@ -1,3 +1,9 @@
+/**
+* author Yme Brugts (s4536622)
+ * @file string_utils.cpp
+ * @date 2025-01-16
+ */
+
 #include "string_utils.h"
 
 #include <algorithm>

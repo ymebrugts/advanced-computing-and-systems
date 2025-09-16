@@ -1,3 +1,9 @@
+/**
+* author Yme Brugts (s4536622)
+ * @file container_utils.cpp
+ * @date 2025-01-16
+ */
+
 #include "container_utils.h"
 #include "string_utils.h"
 

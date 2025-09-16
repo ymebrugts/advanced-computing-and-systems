@@ -1,3 +1,9 @@
+/**
+* author Yme Brugts (s4536622)
+ * @file string_utils.h
+ * @date 2025-01-16
+ */
+
 #pragma once
 /**
  * @file string_utils.h

@@ -1,3 +1,9 @@
+/**
+* author Yme Brugts (s4536622)
+ * @file container_utils.h
+ * @date 2025-01-16
+ */
+
 #pragma once
 /**
  * @file container_utils.h
