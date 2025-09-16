@@ -6,10 +6,11 @@
 
 
 #include "program_runner.h"
-#include "moviesearch/moviesearch_cli.h"
+#include "moviesearch.h"
 
 #include <iostream>
 #include <string>
+#include <vector>
 
 namespace {
 
@@ -48,7 +49,7 @@ namespace {
             auto tokens = moviesearch::tokenize_command_line(line);
             if (tokens.empty()) continue;
 
-            const std::string& command = tokens[0];
+            const std::string& cmd = tokens[0];
 
             if (cmd == "moviesearch") {
                 auto args = std::vector<std::string>(tokens.begin() + 1, tokens.end());
