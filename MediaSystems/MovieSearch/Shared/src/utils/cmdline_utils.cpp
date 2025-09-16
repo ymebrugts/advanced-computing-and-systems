@@ -6,7 +6,7 @@
 
 #include "cmdline_utils.h"
 
-namespace moviesearch::shared::utils {
+namespace shared::utils {
 
     bool token_is_option(const std::string& t) {
         return t.size() >= 2 && t[0] == '-';

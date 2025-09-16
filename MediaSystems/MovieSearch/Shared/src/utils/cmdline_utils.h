@@ -14,7 +14,7 @@
 #include <vector>
 #include <utility>
 
-namespace oviesearch::shared::utils {
+namespace shared::utils {
 
     /**
      * @brief Check if a token is a command line option (starts with -)

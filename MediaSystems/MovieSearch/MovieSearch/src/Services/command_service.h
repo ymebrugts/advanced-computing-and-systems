@@ -10,7 +10,7 @@
 #include <vector>
 #include <ostream>
 
-namespace moviesearch {
+namespace moviesearch::services {
 
     // A structured representation of the parsed query.
     // Semantics: all vectors are ANDed; year (if present) is also ANDed.

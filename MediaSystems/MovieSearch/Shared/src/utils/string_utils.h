@@ -12,7 +12,7 @@
 
 #include <string>
 
-namespace oviesearch::shared::utils {
+namespace shared::utils {
 
     /**
      * @brief Remove leading whitespace from a string

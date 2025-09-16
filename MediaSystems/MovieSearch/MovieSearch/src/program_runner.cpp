@@ -46,20 +46,20 @@ void RunProgram(std::istream& in, std::ostream& out, bool interactiveMode) {
         if (line.empty()) continue;
 
         // Tokenize respecting quotes
-        auto tokens = moviesearch::tokenize_command_line(line);
+        auto tokens = moviesearch::services::tokenize_command_line(line);
         if (tokens.empty()) continue;
 
         const std::string& cmd = tokens[0];
 
         if (cmd == "moviesearch") {
             auto args = std::vector<std::string>(tokens.begin() + 1, tokens.end());
-            auto res = moviesearch::parse_moviesearch_tokens(args);
+            auto res = moviesearch::services::parse_moviesearch_tokens(args);
             for (const auto& w : res.warnings) out << "Warning: " << w << "\n";
             if (!res.ok) {
                 for (const auto& e : res.errors) out << "Error: " << e << "\n";
                 continue;
             }
-            moviesearch::print_query(out, res.query);
+            moviesearch::services::print_query(out, res.query);
         }
         else if (cmd == "help") {
             out << HELP_MESSAGE << std::endl;

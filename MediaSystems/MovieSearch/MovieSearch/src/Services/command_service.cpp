@@ -7,8 +7,9 @@
 #include <unordered_set>
 
 #include "cmdline_utils.h"
+#include "container_utils.h"
 
-namespace moviesearch {
+namespace moviesearch::services {
     
     std::vector<std::string> tokenize_command_line(const std::string& raw) {
         std::vector<std::string> tokens;
@@ -39,7 +40,7 @@ namespace moviesearch {
             const std::vector<std::string>& args,
             std::size_t& i,
             ParseResult& res) {
-            auto vals = utils::collect_value_tokens(args, i);
+            auto vals = shared::utils::collect_value_tokens(args, i);
             if (vals.empty()) {
                 res.errors.push_back("Missing value for --" + optName);
                 return;
@@ -52,8 +53,8 @@ namespace moviesearch {
 	        args.reserve(rawArgs.size());
 
 	        for (const auto& t : rawArgs) {
-	            auto [opt, attached] = utils::split_opt_equals(t);
-	            if (!attached.empty() && utils::token_is_option(opt)) {
+	            auto [opt, attached] = shared::utils::split_opt_equals(t);
+	            if (!attached.empty() && shared::utils::token_is_option(opt)) {
 	                args.push_back(opt);
 	                args.push_back(attached);
 	            }
@@ -65,7 +66,7 @@ namespace moviesearch {
 	    }
 
 	    void handle_year_option(Query& q, const std::vector<std::string>& args, std::size_t& i, ParseResult& res) {
-	        auto vals = utils::collect_value_tokens(args, i);
+	        auto vals = shared::utils::collect_value_tokens(args, i);
 	        if (vals.empty()) {
 	            res.errors.push_back("Missing value for --year");
 	            return;
@@ -88,26 +89,26 @@ namespace moviesearch {
 	        while (i < args.size()) {
 	            const std::string tok = args[i++];
 
-	            if (!utils::token_is_option(tok)) {
+	            if (!shared::utils::token_is_option(tok)) {
 	                res.warnings.push_back("Ignoring unexpected token: '" + tok + "'");
 	                continue;
 	            }
 
-	            if (utils::matches_option(tok, "title")) {
+	            if (shared::utils::matches_option(tok, "title")) {
 	                process_moviesearch_param(q.title_keywords, "title", args, i, res);
 	            }
-	            else if (utils::matches_option(tok, "year")) {
+	            else if (shared::utils::matches_option(tok, "year")) {
 	                handle_year_option(q, args, i, res);
 	            }
-	            else if (utils::matches_option(tok, "genre") || utils::matches_option(tok, "genres")) {
+	            else if (shared::utils::matches_option(tok, "genre") || shared::utils::matches_option(tok, "genres")) {
 	                process_moviesearch_param(q.genres, "genre", args, i, res);
 	            }
-	            else if (utils::matches_option(tok, "tag") || utils::matches_option(tok, "tags")) {
+	            else if (shared::utils::matches_option(tok, "tag") || shared::utils::matches_option(tok, "tags")) {
 	                process_moviesearch_param(q.tags, "tag", args, i, res);
 	            }
 	            else {
 	                res.errors.push_back("Unknown option: '" + tok + "'");
-	                while (i < args.size() && !utils::token_is_option(args[i])) ++i; // skip
+	                while (i < args.size() && !shared::utils::token_is_option(args[i])) ++i; // skip
 	            }
 	        }
 	    }
@@ -119,9 +120,9 @@ namespace moviesearch {
 	        }
 
 	        // Dedupe lists while preserving order
-	        utils::dedupe_preserve_order(q.title_keywords);
-	        utils::dedupe_preserve_order(q.genres);
-	        utils::dedupe_preserve_order(q.tags);
+	        shared::utils::dedupe_preserve_order(q.title_keywords);
+	        shared::utils::dedupe_preserve_order(q.genres);
+	        shared::utils::dedupe_preserve_order(q.tags);
 
 	        res.ok = res.errors.empty();
 	    }

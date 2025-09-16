@@ -12,7 +12,7 @@
 
 #include <unordered_set>
 
-namespace oviesearch::shared::utils {
+namespace shared::utils {
 
     template <class Seq>
     void dedupe_preserve_order(Seq& v) {
@@ -25,4 +25,4 @@ namespace oviesearch::shared::utils {
         v.swap(out);
     }
 
-} // namespace oviesearch::shared::utils
+} // namespace shared::utils
