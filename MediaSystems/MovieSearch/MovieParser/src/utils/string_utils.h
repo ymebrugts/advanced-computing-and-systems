@@ -12,8 +12,7 @@
 
 #include <string>
 
-namespace moviesearch {
-namespace utils {
+namespace moviesearch::utils {
 
     /**
      * @brief Remove leading whitespace from a string
@@ -50,5 +49,4 @@ namespace utils {
      */
     void normalize_dashes(std::string& s);
 
-} // namespace utils
-} // namespace moviesearch
+}

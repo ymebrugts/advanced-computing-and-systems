@@ -9,8 +9,7 @@
 #include <algorithm>
 #include <cctype>
 
-namespace moviesearch {
-namespace utils {
+namespace moviesearch::utils {
 
     std::string ltrim(std::string s) {
         s.erase(s.begin(), std::find_if(s.begin(), s.end(),
@@ -45,5 +44,4 @@ namespace utils {
         replaceAll(s, "—", "-");
     }
 
-} // namespace utils
-} // namespace moviesearch
+}

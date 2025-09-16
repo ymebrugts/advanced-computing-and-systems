@@ -14,8 +14,7 @@
 #include <vector>
 #include <utility>
 
-namespace moviesearch {
-namespace utils {
+namespace moviesearch::utils {
 
     /**
      * @brief Check if a token is a command line option (starts with -)
@@ -47,5 +46,4 @@ namespace utils {
      */
     std::vector<std::string> collect_value_tokens(const std::vector<std::string>& tokens, std::size_t& i);
 
-} // namespace utils
-} // namespace moviesearch
+}

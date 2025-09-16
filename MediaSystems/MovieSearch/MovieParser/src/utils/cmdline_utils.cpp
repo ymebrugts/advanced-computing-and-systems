@@ -6,8 +6,7 @@
 
 #include "cmdline_utils.h"
 
-namespace moviesearch {
-namespace utils {
+namespace moviesearch::utils {
 
     bool token_is_option(const std::string& t) {
         return t.size() >= 2 && t[0] == '-';
@@ -34,5 +33,4 @@ namespace utils {
         return vals;
     }
 
-} // namespace utils
-} // namespace moviesearch
+}

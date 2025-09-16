@@ -13,8 +13,7 @@
 #include <string>
 #include <vector>
 
-namespace moviesearch {
-namespace utils {
+namespace moviesearch::utils {
 
     /**
      * @brief Split a string on commas while preserving non-empty parts
@@ -31,8 +30,7 @@ namespace utils {
     template <class Seq>
     void dedupe_preserve_order(Seq& v);
 
-} // namespace utils
-} // namespace moviesearch
+}
 
 // Template implementation
 #include "container_utils_impl.h"
