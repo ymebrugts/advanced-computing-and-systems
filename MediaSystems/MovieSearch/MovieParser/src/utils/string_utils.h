@@ -43,10 +43,4 @@ namespace moviesearch::utils {
      */
     void replaceAll(std::string& s, const std::string& from, const std::string& to);
 
-    /**
-     * @brief Normalize UTF-8 en/em dashes to ASCII hyphen-minus
-     * @param s String to normalize
-     */
-    void normalize_dashes(std::string& s);
-
 }

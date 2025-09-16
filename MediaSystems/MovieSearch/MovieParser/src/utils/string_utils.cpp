@@ -36,12 +36,4 @@ namespace moviesearch::utils {
         }
     }
 
-    void normalize_dashes(std::string& s) {
-        replaceAll(s, "\xE2\x80\x93", "-"); // – en
-        replaceAll(s, "\xE2\x80\x94", "-"); // — em
-        // best-effort if compiler/source lets these appear directly
-        replaceAll(s, "–", "-");
-        replaceAll(s, "—", "-");
-    }
-
 }
