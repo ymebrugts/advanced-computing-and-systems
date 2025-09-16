@@ -6,11 +6,12 @@
 
 
 #include "program_runner.h"
-#include "moviesearch.h"
 
 #include <iostream>
 #include <string>
 #include <vector>
+
+#include "Services/command_service.h"
 
 
 const std::string HELP_MESSAGE =

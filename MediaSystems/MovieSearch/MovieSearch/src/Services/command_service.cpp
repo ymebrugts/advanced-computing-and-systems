@@ -1,13 +1,12 @@
-﻿#include "moviesearch.h"
-#include "utils/string_utils.h"
-#include "utils/cmdline_utils.h"
-#include "utils/container_utils.h"
+﻿#include "command_service.h"
 
 #include <algorithm>
 #include <cctype>
 #include <sstream>
 #include <stdexcept>
 #include <unordered_set>
+
+#include "cmdline_utils.h"
 
 namespace moviesearch {
     

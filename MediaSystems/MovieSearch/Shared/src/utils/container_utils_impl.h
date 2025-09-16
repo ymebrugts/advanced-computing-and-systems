@@ -12,7 +12,7 @@
 
 #include <unordered_set>
 
-namespace moviesearch::utils {
+namespace oviesearch::shared::utils {
 
     template <class Seq>
     void dedupe_preserve_order(Seq& v) {
@@ -25,4 +25,4 @@ namespace moviesearch::utils {
         v.swap(out);
     }
 
-} // namespace moviesearch::utils
+} // namespace oviesearch::shared::utils

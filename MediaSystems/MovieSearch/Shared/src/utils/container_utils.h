@@ -13,7 +13,7 @@
 #include <string>
 #include <vector>
 
-namespace moviesearch::utils {
+namespace oviesearch::shared::utils {
 
     /**
      * @brief Split a string on commas while preserving non-empty parts

@@ -14,7 +14,7 @@
 #include <vector>
 #include <utility>
 
-namespace moviesearch::utils {
+namespace oviesearch::shared::utils {
 
     /**
      * @brief Check if a token is a command line option (starts with -)

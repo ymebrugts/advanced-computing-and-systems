@@ -9,7 +9,7 @@
 
 #include <sstream>
 
-namespace moviesearch::utils {
+namespace oviesearch::shared::utils {
 
     std::vector<std::string> split_commas_preserve(const std::string& s) {
         std::vector<std::string> out;
@@ -22,4 +22,4 @@ namespace moviesearch::utils {
         return out;
     }
 
-} // namespace moviesearch::utils
+} // namespace oviesearch::shared::utils

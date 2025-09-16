@@ -9,7 +9,7 @@
 #include <algorithm>
 #include <cctype>
 
-namespace moviesearch::utils {
+namespace oviesearch::shared::utils {
 
     std::string ltrim(std::string s) {
         s.erase(s.begin(), std::find_if(s.begin(), s.end(),

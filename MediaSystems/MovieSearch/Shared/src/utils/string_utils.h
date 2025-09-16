@@ -12,7 +12,7 @@
 
 #include <string>
 
-namespace moviesearch::utils {
+namespace oviesearch::shared::utils {
 
     /**
      * @brief Remove leading whitespace from a string
