@@ -23,17 +23,17 @@
 const std::string HELP_MESSAGE =
     "Available commands:\n"
     "  moviesearch [options]    Prepare a movie search query (parsing only)\n"
-    "    --title <keywords>     Title keywords (multi-word allowed; AND semantics)\n"
+    "    --title <keywords>     Title keywords (multi-word allowed)\n"
     "    --year  <YYYY>         Exact release year\n"
-    "    --genre <g1,g2,...>    One or more genres (comma-separated or repeat flag)\n"
-    "    --tag   <t1,t2,...>    One or more tags (comma-separated or repeat flag)\n"
+    "    --genre <g1,g2,...>    One or more genres\n"
+    "    --tag   <t1,t2,...>    One or more tags\n"
     "\n"
     "Notes:\n"
     "You can also use --option=value.\n"
     "\n"
     "Examples:\n"
     "  moviesearch --title Blood --tag Upton\n"
-    "  moviesearch --title \"Las Vegas\"\n";
+    "  moviesearch --title Las Vegas\n";
 
 
 void RunProgram(std::istream& in, std::ostream& out, bool interactiveMode) {
