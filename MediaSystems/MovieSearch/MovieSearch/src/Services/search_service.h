@@ -15,15 +15,15 @@ namespace movie_search::services {
     /**
      * @brief Search movies based on a parsed query
      *
-     * @param q The query (title keywords, year, genres, tags)
+     * @param The query (title keywords, year, genres, tags)
      * @param movies Parsed movies from movies.dat
      * @param tags Parsed tags from tags.dat
      * @return Vector of matching movies
      */
     std::vector<movie_parser::models::Movie> searchMovies(
-        const movie_search::models::Query& q,
+        const movie_search::models::Query&,
         const std::vector<movie_parser::models::Movie>& movies,
         const std::vector<movie_parser::models::MovieTag>& tags
     );
 
-} // namespace movie_search::services
+}
