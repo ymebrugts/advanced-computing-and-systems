@@ -7,7 +7,7 @@
 
 #include <string>
 #include <vector>
-#include "../models/movie_tag.h"
+#include "../models/MovieTag.h"
 
 namespace movie_parser::parsers {
 
@@ -16,6 +16,6 @@ namespace movie_parser::parsers {
      * @param filename Path to tags.dat
      * @return Vector of Tag structs
      */
-    std::vector<movie_parser::models::movie_tag> loadTags(const std::string& filename);
+    std::vector<movie_parser::models::MovieTag> loadTags(const std::string& filename);
 
 }

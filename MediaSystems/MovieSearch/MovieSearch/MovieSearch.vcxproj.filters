@@ -32,5 +32,11 @@
     <ClInclude Include="src\Services\command_service.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\models\Query.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\models\ParseResult.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -16,6 +16,8 @@
 #include "rating_parser.h"
 #include "tags_parser.h"
 #include "movie_parser.h"
+#include "models/Query.h"
+
 
 
 const std::string HELP_MESSAGE =
@@ -69,7 +71,7 @@ void RunProgram(std::istream& in, std::ostream& out, bool interactiveMode) {
                 for (const auto& e : res.errors) out << "Error: " << e << "\n";
                 continue;
             }
-            moviesearch::services::print_query(out, res.query);
+            print_query(out, res.query);
         }
         else if (cmd == "help") {
             out << HELP_MESSAGE << std::endl;
@@ -81,5 +83,42 @@ void RunProgram(std::istream& in, std::ostream& out, bool interactiveMode) {
             out << "Error: Unknown command '" << cmd << "'.\n";
         }
     }
+}
+
+
+void print_query(std::ostream& out, const movie_search::models::Query& q) {
+    out << "Parsed movie search (AND semantics):\n";
+    out << "  title_keywords : ";
+    if (q.title_keywords.empty()) out << "(none)\n";
+    else {
+        out << "[";
+        for (std::size_t i = 0; i < q.title_keywords.size(); ++i) {
+            if (i) out << ", ";
+            out << "\"" << q.title_keywords[i] << "\"";
+        }
+        out << "]\n";
+    }
+    out << "  year           : " << (q.has_year ? std::to_string(q.year) : "(none)") << "\n";
+    out << "  genres         : ";
+    if (q.genres.empty()) out << "(none)\n";
+    else {
+        out << "[";
+        for (std::size_t i = 0; i < q.genres.size(); ++i) {
+            if (i) out << ", ";
+            out << q.genres[i];
+        }
+        out << "]\n";
+    }
+    out << "  tags           : ";
+    if (q.tags.empty()) out << "(none)\n";
+    else {
+        out << "[";
+        for (std::size_t i = 0; i < q.tags.size(); ++i) {
+            if (i) out << ", ";
+            out << q.tags[i];
+        }
+        out << "]\n";
+    }
+    out << "(execution not implemented; parsing only)\n";
 }
 

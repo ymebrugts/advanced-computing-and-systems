@@ -136,6 +136,8 @@
     <ClCompile Include="src\Services\command_service.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\models\ParseResult.h" />
+    <ClInclude Include="src\models\Query.h" />
     <ClInclude Include="src\program_runner.h" />
     <ClInclude Include="src\Services\command_service.h" />
   </ItemGroup>

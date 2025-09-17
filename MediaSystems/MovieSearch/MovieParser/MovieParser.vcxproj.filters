@@ -21,13 +21,13 @@
     <ClInclude Include="src\parsers\movie_parser.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\models\movie_rating.h">
+    <ClInclude Include="src\models\MovieRating.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\models\movie_tag.h">
+    <ClInclude Include="src\models\MovieTag.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\models\movie.h">
+    <ClInclude Include="src\models\Movie.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\parsers\tags_parser.h">

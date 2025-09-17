@@ -7,7 +7,7 @@
 
 #include <string>
 #include <vector>
-#include "../models/movie_rating.h"
+#include "../models/MovieRating.h"
 
 namespace movie_parser::parsers {
 
@@ -16,6 +16,6 @@ namespace movie_parser::parsers {
      * @param filename Path to ratings.dat
      * @return Vector of Rating structs
      */
-    std::vector<movie_parser::models::movie_rating> loadRatings(const std::string& filename);
+    std::vector<movie_parser::models::MovieRating> loadRatings(const std::string& filename);
 
 }

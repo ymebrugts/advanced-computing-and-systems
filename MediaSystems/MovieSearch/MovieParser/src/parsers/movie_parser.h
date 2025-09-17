@@ -18,6 +18,6 @@ namespace movie_parser::parsers {
      * @param filename Path to movies.dat
      * @return Vector of Movie structs
      */
-    std::vector<movie_parser::models::movie> loadMovies(const std::string& filename);
+    std::vector<movie_parser::models::Movie> loadMovies(const std::string& filename);
 
 }

@@ -1,7 +1,7 @@
 #pragma once
 /**
  * author Yme Brugts (s4536622)
- * @file movie.h
+ * @file Movie.h
  * @date 2025-09-17
  */
 
@@ -9,7 +9,7 @@
 
 
 namespace movie_parser::models {
-    struct movie {
+    struct Movie {
         int movie_id;
         std::string title;
         std::string genres;  // or split into vector<string>
