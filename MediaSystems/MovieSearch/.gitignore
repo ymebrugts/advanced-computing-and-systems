@@ -44,3 +44,5 @@ ipch
 main
 
 *.dat
+
+enc_temp_folder

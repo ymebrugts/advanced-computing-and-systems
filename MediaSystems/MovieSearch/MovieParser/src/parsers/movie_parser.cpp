@@ -16,7 +16,7 @@ namespace movie_parser::parsers
             auto tokens = shared::utils::split(line, "::");
             if (tokens.size() == 3) {
                 movie_parser::models::movie m;
-                m.movieId = std::stoi(tokens[0]);
+                m.movie_id = std::stoi(tokens[0]);
                 m.title = tokens[1];
                 m.genres = tokens[2];
                 movies.push_back(m);

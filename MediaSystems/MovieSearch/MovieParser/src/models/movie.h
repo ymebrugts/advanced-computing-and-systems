@@ -10,7 +10,7 @@
 
 namespace movie_parser::models {
     struct movie {
-        int movieId;
+        int movie_id;
         std::string title;
         std::string genres;  // or split into vector<string>
     };

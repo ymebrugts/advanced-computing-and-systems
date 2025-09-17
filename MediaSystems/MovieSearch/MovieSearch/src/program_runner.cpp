@@ -57,9 +57,8 @@ void RunProgram(std::istream& in, std::ostream& out, bool interactiveMode) {
 
         if (cmd == "parse")
         {
-            auto ratings = loadRatings("ratings.dat");
-            auto tags = loadTags("tags.dat");
-            auto movies = loadMovies("movies.dat");
+        	auto tags = movie_parser::parsers::loadTags("../Dataset/tags.dat");
+        	auto movies = movie_parser::parsers::loadMovies("../Dataset/movies.dat");
         }
 
         if (cmd == "moviesearch") {
