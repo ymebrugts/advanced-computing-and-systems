@@ -17,7 +17,7 @@
 #include "tags_parser.h"
 #include "movie_parser.h"
 #include "models/Query.h"
-
+#include "Services/search_service.h"
 
 
 const std::string HELP_MESSAGE =
@@ -62,8 +62,24 @@ void RunProgram(std::istream& in, std::ostream& out, bool interactiveMode) {
         	auto tags = movie_parser::parsers::loadTags("../Dataset/tags.dat");
         	auto movies = movie_parser::parsers::loadMovies("../Dataset/movies.dat");
         }
+        else if (cmd == "moviesearch") {
+            auto args = std::vector<std::string>(tokens.begin() + 1, tokens.end());
+            auto res = moviesearch::services::parse_moviesearch_tokens(args);
+            for (const auto& w : res.warnings) out << "Warning: " << w << "\n";
+            if (!res.ok) {
+                for (const auto& e : res.errors) out << "Error: " << e << "\n";
+                continue;
+            }
+            auto tags = movie_parser::parsers::loadTags("../Dataset/tags.dat");
+            auto movies = movie_parser::parsers::loadMovies("../Dataset/movies.dat");
 
-        if (cmd == "moviesearch") {
+            auto matches = movie_search::services::searchMovies(res.query, movies, tags);
+
+            for (const auto& m : matches) {
+                out << m.movie_id << "::" << m.title << "::" << m.genres << "\n";
+            }
+        }
+        else if (cmd == "printquery") {
             auto args = std::vector<std::string>(tokens.begin() + 1, tokens.end());
             auto res = moviesearch::services::parse_moviesearch_tokens(args);
             for (const auto& w : res.warnings) out << "Warning: " << w << "\n";
@@ -72,7 +88,7 @@ void RunProgram(std::istream& in, std::ostream& out, bool interactiveMode) {
                 continue;
             }
             print_query(out, res.query);
-        }
+		}
         else if (cmd == "help") {
             out << HELP_MESSAGE << std::endl;
         }

@@ -104,7 +104,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Shared\src\utils;$(SolutionDir)MovieParser\src\parsers</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Shared\src\utils;$(SolutionDir)MovieParser\src\parsers;$(SolutionDir)MovieParser\src\models</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
@@ -121,7 +121,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)Shared\src\utils;$(SolutionDir)MovieParser\src\parsers</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Shared\src\utils;$(SolutionDir)MovieParser\src\parsers;$(SolutionDir)MovieParser\src\models</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -134,12 +134,14 @@
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\program_runner.cpp" />
     <ClCompile Include="src\Services\command_service.cpp" />
+    <ClCompile Include="src\Services\search_service.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\models\ParseResult.h" />
     <ClInclude Include="src\models\Query.h" />
     <ClInclude Include="src\program_runner.h" />
     <ClInclude Include="src\Services\command_service.h" />
+    <ClInclude Include="src\Services\search_service.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MovieParser\MovieParser.vcxproj">
