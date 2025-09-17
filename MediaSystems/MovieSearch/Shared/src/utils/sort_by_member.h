@@ -1,6 +1,6 @@
 #pragma once
 /**
-* author Yme Brugts (s4536622)
+ * author Yme Brugts (s4536622)
  * @file sort_by_member.h
  * @date 2024-12-01
  */

@@ -1,14 +1,11 @@
 /**
 * author Yme Brugts (s4536622)
  * @file container_utils_impl.h
- * @date 2025-01-16
+ * @date 2025-09-16
  */
 
 #pragma once
-/**
- * @file container_utils_impl.h
- * @brief Template implementations for container utilities
- */
+
 
 #include <unordered_set>
 
@@ -25,4 +22,4 @@ namespace shared::utils {
         v.swap(out);
     }
 
-} // namespace shared::utils
+}

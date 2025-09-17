@@ -13,6 +13,10 @@
 
 #include "Services/command_service.h"
 
+#include "rating_parser.h"
+#include "tags_parser.h"
+#include "movie_parser.h"
+
 
 const std::string HELP_MESSAGE =
     "Available commands:\n"
@@ -50,6 +54,13 @@ void RunProgram(std::istream& in, std::ostream& out, bool interactiveMode) {
         if (tokens.empty()) continue;
 
         const std::string& cmd = tokens[0];
+
+        if (cmd == "parse")
+        {
+            auto ratings = loadRatings("ratings.dat");
+            auto tags = loadTags("tags.dat");
+            auto movies = loadMovies("movies.dat");
+        }
 
         if (cmd == "moviesearch") {
             auto args = std::vector<std::string>(tokens.begin() + 1, tokens.end());

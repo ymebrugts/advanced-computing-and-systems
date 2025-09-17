@@ -1,4 +1,10 @@
 #pragma once
+/**
+ * author Yme Brugts (s4536622)
+ * @file movie.h
+ * @date 2025-09-17
+ */
+
 #include <string>
 
 

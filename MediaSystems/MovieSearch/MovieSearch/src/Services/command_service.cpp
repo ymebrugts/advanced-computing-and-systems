@@ -1,4 +1,10 @@
-﻿#include "command_service.h"
+﻿/**
+ * author Yme Brugts (s4536622)
+ * @file command_service.cpp
+ * @date 2025-01-16
+ */
+
+#include "command_service.h"
 
 #include <algorithm>
 #include <cctype>

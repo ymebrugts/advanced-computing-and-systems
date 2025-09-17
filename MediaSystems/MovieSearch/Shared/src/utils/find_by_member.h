@@ -1,6 +1,7 @@
 #pragma once
+
 /**
-* author Yme Brugts (s4536622)
+ * author Yme Brugts (s4536622)
  * @file find_by_member.h
  * @date 2024-11-20
  */
