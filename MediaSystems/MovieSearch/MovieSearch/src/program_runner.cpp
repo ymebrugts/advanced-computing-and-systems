@@ -23,19 +23,23 @@
 
 
 const std::string HELP_MESSAGE =
-    "Available commands:\n"
-    "  moviesearch [options]    Prepare a movie search query (parsing only)\n"
-    "    --title <keywords>     Title keywords (multi-word allowed)\n"
-    "    --year  <YYYY>         Exact release year\n"
-    "    --genre <g1,g2,...>    One or more genres\n"
-    "    --tag   <t1,t2,...>    One or more tags\n"
-    "\n"
-    "Notes:\n"
-    "You can also use --option=value.\n"
-    "\n"
-    "Examples:\n"
-    "  moviesearch --title Blood --tag Upton\n"
-    "  moviesearch --title Las Vegas\n";
+	"Available commands:\n"
+	"  moviesearch [options]      Prepare and execute a movie search query\n"
+	"    --title <keywords>       Title keywords (multi-word allowed)\n"
+	"    --year  <YYYY>           Exact release year\n"
+	"    --genre <genres>         One or more genres\n"
+	"    --tag   <tags>           One or more tags\n"
+	"\n"
+	"  parse                      Parse datasets (movies.dat, tags.dat)\n"
+	"  printquery [options]       Show parsed query structure without searching\n"
+	"  printallmovies             Print all movies to stdout\n"
+	"  printallmoviestofile       Write all movies to all_movies.txt\n"
+	"  help                       Show this help message\n"
+	"  end                        Exit the program\n"
+	"\n"
+	"Examples:\n"
+	"  moviesearch --title Blood --tag Upton\n"
+	"  moviesearch --title Las Vegas\n";
 
 
 void RunProgram(std::istream& in, std::ostream& out, bool interactiveMode) {
@@ -59,8 +63,8 @@ void RunProgram(std::istream& in, std::ostream& out, bool interactiveMode) {
 
         if (cmd == "parse")
         {
-        	auto tags = movie_parser::parsers::loadTags("../Dataset/tags.dat");
-        	auto movies = movie_parser::parsers::loadMovies("../Dataset/movies.dat");
+        	auto tags = movie_parser::parsers::loadTags("tags.dat");
+        	auto movies = movie_parser::parsers::loadMovies("movies.dat");
         }
         else if (cmd == "moviesearch") {
             auto tokens = moviesearch::services::tokenize_command_line(line);
@@ -73,8 +77,8 @@ void RunProgram(std::istream& in, std::ostream& out, bool interactiveMode) {
                 for (const auto& e : res.errors) out << "Error: " << e << "\n";
                 continue;
             }
-            auto tags = movie_parser::parsers::loadTags("../Dataset/tags.dat");
-            auto movies = movie_parser::parsers::loadMovies("../Dataset/movies.dat");
+            auto tags = movie_parser::parsers::loadTags("tags.dat");
+            auto movies = movie_parser::parsers::loadMovies("movies.dat");
 
             auto matches = movie_search::services::searchMovies(res.query, movies, tags);
 
@@ -97,7 +101,7 @@ void RunProgram(std::istream& in, std::ostream& out, bool interactiveMode) {
 		}
         else if (cmd == "printallmovies")
         {
-            auto movies = movie_parser::parsers::loadMovies("../Dataset/movies.dat");
+            auto movies = movie_parser::parsers::loadMovies("movies.dat");
 
             for (const auto& m : movies) {
                 out << m.movie_id << "::" << m.title << "::" << m.genres << "\n";
@@ -105,7 +109,7 @@ void RunProgram(std::istream& in, std::ostream& out, bool interactiveMode) {
         }
         else if (cmd == "printallmoviestofile")
         {
-            auto movies = movie_parser::parsers::loadMovies("../Dataset/movies.dat");
+            auto movies = movie_parser::parsers::loadMovies("movies.dat");
 
             std::ofstream file("all_movies.txt"); // choose your filename
             if (!file) {
