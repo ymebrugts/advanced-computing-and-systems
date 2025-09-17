@@ -36,4 +36,15 @@ namespace shared::utils {
         }
     }
 
+    std::vector<std::string> split(const std::string& s, const std::string& delimiter) {
+        std::vector<std::string> tokens;
+        size_t pos = 0, start = 0;
+        while ((pos = s.find(delimiter, start)) != std::string::npos) {
+            tokens.push_back(s.substr(start, pos - start));
+            start = pos + delimiter.length();
+        }
+        tokens.push_back(s.substr(start));
+        return tokens;
+    }
+
 }

@@ -11,6 +11,7 @@
  */
 
 #include <string>
+#include <vector>
 
 namespace shared::utils {
 
@@ -42,5 +43,13 @@ namespace shared::utils {
      * @param to Replacement substring
      */
     void replaceAll(std::string& s, const std::string& from, const std::string& to);
+
+    /**
+	 * @brief Split a string by a delimiter into tokens
+	 * @param s Input string
+	 * @param delimiter Delimiter string (default "::")
+	 * @return Vector of tokens
+	 */
+    std::vector<std::string> split(const std::string& s, const std::string& delimiter = "::");
 
 }

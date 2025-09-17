@@ -113,6 +113,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>$(SolutionDir)Shared\src\utils</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -131,6 +132,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>$(SolutionDir)Shared\src\utils</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -142,11 +144,22 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="framework.h" />
+    <ClInclude Include="src\models\movie.h" />
+    <ClInclude Include="src\models\movie_rating.h" />
+    <ClInclude Include="src\models\movie_tag.h" />
+    <ClInclude Include="src\parsers\movie_parser.h" />
+    <ClInclude Include="src\parsers\rating_parser.h" />
+    <ClInclude Include="src\parsers\tags_parser.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Shared\Shared.vcxproj">
       <Project>{3513a3d1-a839-408f-9db0-fa82b2b4adfb}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\parsers\movie_parser.cpp" />
+    <ClCompile Include="src\parsers\rating_parser.cpp" />
+    <ClCompile Include="src\parsers\tags_parser.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
