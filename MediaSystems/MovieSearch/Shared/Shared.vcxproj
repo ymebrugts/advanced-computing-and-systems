@@ -147,7 +147,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\utils\cmdline_utils.cpp" />
-    <ClCompile Include="src\utils\container_utils.cpp" />
     <ClCompile Include="src\utils\string_utils.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

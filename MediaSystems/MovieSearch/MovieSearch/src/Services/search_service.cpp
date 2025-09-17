@@ -9,19 +9,9 @@
 #include <cctype>
 #include <optional>
 
-namespace {
+#include "string_utils.h"
 
-    // Case-insensitive substring search
-    bool icontains(const std::string& text, const std::string& word) {
-        auto it = std::search(
-            text.begin(), text.end(),
-            word.begin(), word.end(),
-            [](unsigned char ch1, unsigned char ch2) {
-                return std::tolower(ch1) == std::tolower(ch2);
-            }
-        );
-        return it != text.end();
-    }
+namespace {
 
     // Extract year from "Title (YYYY)"
     std::optional<int> extractYear(const std::string& title) {
@@ -52,7 +42,7 @@ namespace movie_search::services {
 
             // All title keywords must appear and case insensitive
             for (const auto& kw : q.title_keywords) {
-                if (!icontains(m.title, kw)) {
+                if (!shared::utils::insensitive_contains_word(m.title, kw)) {
                     match = false;
                     break;
                 }
@@ -67,7 +57,7 @@ namespace movie_search::services {
             // All genres must appear
             if (match && !q.genres.empty()) {
                 for (const auto& g : q.genres) {
-                    if (!icontains(m.genres, g)) {
+                    if (!shared::utils::insensitive_contains_word(m.genres, g)) {
                         match = false;
                         break;
                     }
@@ -75,12 +65,13 @@ namespace movie_search::services {
             }
 
             // Tags. At least one must match, across all movie tags.
+            // Since human made it uses contains instead of matching on the whole word
             if (match && !q.tags.empty()) {
                 bool found = false;
                 for (const auto& t : tags) {
                     if (t.movie_id == m.movie_id) {
                         for (const auto& qtag : q.tags) {
-                            if (icontains(t.tag, qtag)) {
+                            if (shared::utils::insensitive_contains(t.tag, qtag)) {
                                 found = true;
                                 break;
                             }

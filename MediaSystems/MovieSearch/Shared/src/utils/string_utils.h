@@ -47,4 +47,7 @@ namespace shared::utils {
 	 */
     std::vector<std::string> split(const std::string& s, const std::string& delimiter = "::");
 
+    bool insensitive_contains(const std::string& text, const std::string& word);
+
+    bool insensitive_contains_word(const std::string& text, const std::string& word);
 }

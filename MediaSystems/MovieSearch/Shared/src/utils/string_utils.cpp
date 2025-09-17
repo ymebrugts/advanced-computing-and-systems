@@ -47,4 +47,38 @@ namespace shared::utils {
         return tokens;
     }
 
+    // Case-insensitive substring search
+    bool insensitive_contains(const std::string& text, const std::string& word) {
+        auto it = std::search(
+            text.begin(), text.end(),
+            word.begin(), word.end(),
+            [](unsigned char ch1, unsigned char ch2) {
+                return std::tolower(ch1) == std::tolower(ch2);
+            }
+        );
+        return it != text.end();
+    }
+
+    bool insensitive_contains_word(const std::string& text, const std::string& word) {
+        if (word.empty()) return false;
+
+        // Split text into tokens by spaces (or smarter delimiters later)
+        auto tokens = shared::utils::split(text, " ");
+        std::string lowerWord;
+        lowerWord.reserve(word.size());
+
+        for (char c : word) lowerWord.push_back(std::tolower(static_cast<unsigned char>(c)));
+
+        for (auto& token : tokens) {
+            std::string lowerToken;
+            lowerToken.reserve(token.size());
+            for (char c : token) lowerToken.push_back(std::tolower(static_cast<unsigned char>(c)));
+
+            if (lowerToken == lowerWord) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 }

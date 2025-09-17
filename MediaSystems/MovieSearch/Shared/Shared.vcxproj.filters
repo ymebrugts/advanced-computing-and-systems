@@ -41,9 +41,6 @@
     <ClCompile Include="src\utils\cmdline_utils.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\utils\container_utils.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\utils\string_utils.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
