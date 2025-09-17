@@ -7,6 +7,7 @@
 
 #include "program_runner.h"
 
+#include <fstream>
 #include <iostream>
 #include <sstream>
 #include <string>
@@ -52,7 +53,6 @@ void RunProgram(std::istream& in, std::ostream& out, bool interactiveMode) {
         if (!std::getline(in, line)) break;
         if (line.empty()) continue;
 
-        // Tokenize respecting quotes
         std::istringstream iss(line);
         std::string cmd;
         iss >> cmd;
@@ -101,6 +101,21 @@ void RunProgram(std::istream& in, std::ostream& out, bool interactiveMode) {
 
             for (const auto& m : movies) {
                 out << m.movie_id << "::" << m.title << "::" << m.genres << "\n";
+            }
+        }
+        else if (cmd == "printallmoviestofile")
+        {
+            auto movies = movie_parser::parsers::loadMovies("../Dataset/movies.dat");
+
+            std::ofstream file("all_movies.txt"); // choose your filename
+            if (!file) {
+                out << "Error: could not open all_movies.txt for writing\n";
+            }
+            else {
+                for (const auto& m : movies) {
+                    file << m.movie_id << "::" << m.title << "::" << m.genres << "\n";
+                }
+                out << "Wrote " << movies.size() << " movies to all_movies.txt\n";
             }
         }
         else if (cmd == "help") {

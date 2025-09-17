@@ -30,6 +30,10 @@ void ShowHelp(std::ostream& out) {
  *         signal different kinds of exits if implemented.
  */
 int main(int argc, char** argv) {
+    std::locale::global(std::locale("en_US.UTF-8"));
+    std::cout.imbue(std::locale());
+    std::cin.imbue(std::locale());
+
     bool interactiveMode = true; // Default to interactive mode
 
     if (argc > 1) {
