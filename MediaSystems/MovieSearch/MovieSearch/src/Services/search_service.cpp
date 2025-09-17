@@ -13,19 +13,6 @@
 
 namespace {
 
-    // Extract year from "Title (YYYY)"
-    std::optional<int> extractYear(const std::string& title) {
-        auto pos1 = title.find_last_of('(');
-        auto pos2 = title.find_last_of(')');
-        if (pos1 != std::string::npos && pos2 != std::string::npos && pos2 > pos1 + 1) {
-            try {
-                return std::stoi(title.substr(pos1 + 1, pos2 - pos1 - 1));
-            }
-            catch (...) {}
-        }
-        return std::nullopt;
-    }
-
 }
 
 namespace movie_search::services {
@@ -50,8 +37,9 @@ namespace movie_search::services {
 
             // Year filter
             if (match && q.has_year) {
-                auto y = extractYear(m.title);
-                if (!y || *y != q.year) match = false;
+                if (!m.year || *m.year != q.year) {
+                	match = false;
+                }
             }
 
             // All genres must appear

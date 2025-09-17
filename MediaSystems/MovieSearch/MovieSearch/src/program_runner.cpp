@@ -8,6 +8,7 @@
 #include "program_runner.h"
 
 #include <iostream>
+#include <sstream>
 #include <string>
 #include <vector>
 
@@ -52,10 +53,9 @@ void RunProgram(std::istream& in, std::ostream& out, bool interactiveMode) {
         if (line.empty()) continue;
 
         // Tokenize respecting quotes
-        auto tokens = moviesearch::services::tokenize_command_line(line);
-        if (tokens.empty()) continue;
-
-        const std::string& cmd = tokens[0];
+        std::istringstream iss(line);
+        std::string cmd;
+        iss >> cmd;
 
         if (cmd == "parse")
         {
@@ -63,6 +63,9 @@ void RunProgram(std::istream& in, std::ostream& out, bool interactiveMode) {
         	auto movies = movie_parser::parsers::loadMovies("../Dataset/movies.dat");
         }
         else if (cmd == "moviesearch") {
+            auto tokens = moviesearch::services::tokenize_command_line(line);
+            if (tokens.empty()) continue;
+
             auto args = std::vector<std::string>(tokens.begin() + 1, tokens.end());
             auto res = moviesearch::services::parse_moviesearch_tokens(args);
             for (const auto& w : res.warnings) out << "Warning: " << w << "\n";
@@ -80,6 +83,9 @@ void RunProgram(std::istream& in, std::ostream& out, bool interactiveMode) {
             }
         }
         else if (cmd == "printquery") {
+            auto tokens = moviesearch::services::tokenize_command_line(line);
+            if (tokens.empty()) continue;
+
             auto args = std::vector<std::string>(tokens.begin() + 1, tokens.end());
             auto res = moviesearch::services::parse_moviesearch_tokens(args);
             for (const auto& w : res.warnings) out << "Warning: " << w << "\n";
@@ -89,6 +95,14 @@ void RunProgram(std::istream& in, std::ostream& out, bool interactiveMode) {
             }
             print_query(out, res.query);
 		}
+        else if (cmd == "printallmovies")
+        {
+            auto movies = movie_parser::parsers::loadMovies("../Dataset/movies.dat");
+
+            for (const auto& m : movies) {
+                out << m.movie_id << "::" << m.title << "::" << m.genres << "\n";
+            }
+        }
         else if (cmd == "help") {
             out << HELP_MESSAGE << std::endl;
         }
