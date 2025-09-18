@@ -86,7 +86,7 @@ void RunProgram(std::istream& in, std::ostream& out, bool interactive_mode) {
                 out << m.movie_id << "::" << m.title << "::" << shared::utils::join(m.genres, "|") << "\n";
             }
         }
-        else if (cmd == "printquery") {
+        else if (cmd == "print") {
             auto tokens = moviesearch::services::tokenize_command_line(input_line);
             if (tokens.empty()) continue;
 
@@ -99,7 +99,7 @@ void RunProgram(std::istream& in, std::ostream& out, bool interactive_mode) {
             }
             movie_search::services::print_query(out, parse_result.query);
 		}
-        else if (cmd == "printallmovies")
+        else if (cmd == "printall")
         {
             auto movies = movie_parser::parsers::load_movies("movies.dat");
 
@@ -107,7 +107,7 @@ void RunProgram(std::istream& in, std::ostream& out, bool interactive_mode) {
                 out << m.movie_id << "::" << m.title << "::" << shared::utils::join(m.genres, "|") << "\n";
             }
         }
-        else if (cmd == "printallmoviestofile")
+        else if (cmd == "alltofile")
         {
             auto movies = movie_parser::parsers::load_movies("movies.dat");
 

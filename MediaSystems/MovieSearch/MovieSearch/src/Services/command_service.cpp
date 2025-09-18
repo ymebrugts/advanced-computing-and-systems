@@ -84,7 +84,7 @@ namespace moviesearch::services {
 	    void finalize_result(movie_search::models::Query& query, movie_search::models::ParseResult& parse_result) {
 	        // Require at least one filter
 	        if (query.titles.empty() && !query.has_year && query.genres.empty() && query.tags.empty()) {
-	            parse_result.errors.push_back("moviesearch requires at least one filter (--title/--year/--genre/--tag)");
+	            parse_result.errors.emplace_back("moviesearch requires at least one filter (--title/--year/--genre/--tag)");
 	        }
 
 	        // Dedupe lists while preserving order
