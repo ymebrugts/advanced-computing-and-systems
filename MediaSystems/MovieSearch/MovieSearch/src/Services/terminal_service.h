@@ -1,7 +1,7 @@
 #pragma once
 /**
  * author Yme Brugts (s4536622)
- * @file search_service.h
+ * @file terminal_service.h
  * @date 2025-09-17
  */
 
