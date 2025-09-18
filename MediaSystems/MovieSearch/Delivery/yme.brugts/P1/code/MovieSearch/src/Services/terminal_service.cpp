@@ -44,6 +44,6 @@ namespace movie_search::services {
             }
             out << "]\n";
         }
-        out << "(execution not implemented; parsing only)\n";
+        out << "(parsing of command only)\n";
     }
 }
