@@ -17,35 +17,35 @@ namespace {
 
 namespace movie_search::services {
 
-    std::vector<movie_parser::models::Movie> searchMovies(
-        const movie_search::models::Query& q,
+    std::vector<movie_parser::models::Movie> search_movies(
+        const movie_search::models::Query& query,
         const std::vector<movie_parser::models::Movie>& movies,
         const std::vector<movie_parser::models::MovieTag>& tags
     ) {
         std::vector<movie_parser::models::Movie> results;
 
-        for (const auto& m : movies) {
+        for (const auto& movie : movies) {
             bool match = true;
 
             // All title keywords must appear and case insensitive
-            for (const auto& kw : q.title_keywords) {
-                if (!shared::utils::insensitive_contains_word(m.title, kw)) {
+            for (const auto& kw : query.title_keywords) {
+                if (!shared::utils::insensitive_contains_word(movie.title, kw)) {
                     match = false;
                     break;
                 }
             }
 
             // Year filter
-            if (match && q.has_year) {
-                if (!m.year || *m.year != q.year) {
+            if (match && query.has_year) {
+                if (!movie.year || *movie.year != query.year) {
                 	match = false;
                 }
             }
 
             // All genres must appear
-            if (match && !q.genres.empty()) {
-                for (const auto& g : q.genres) {
-                    if (!shared::utils::insensitive_contains_word(m.genres, g)) {
+            if (match && !query.genres.empty()) {
+                for (const auto& g : query.genres) {
+                    if (!shared::utils::insensitive_contains_word(movie.genres, g)) {
                         match = false;
                         break;
                     }
@@ -54,12 +54,12 @@ namespace movie_search::services {
 
             // Tags. At least one must match, across all movie tags.
             // Since human made it uses contains instead of matching on the whole word
-            if (match && !q.tags.empty()) {
+            if (match && !query.tags.empty()) {
                 bool found = false;
-                for (const auto& t : tags) {
-                    if (t.movie_id == m.movie_id) {
-                        for (const auto& qtag : q.tags) {
-                            if (shared::utils::insensitive_contains_word(t.tag, qtag)) {
+                for (const auto& tag : tags) {
+                    if (tag.movie_id == movie.movie_id) {
+                        for (const auto& queryTag : query.tags) {
+                            if (shared::utils::insensitive_contains_word(tag.tag, queryTag)) {
                                 found = true;
                                 break;
                             }
@@ -71,7 +71,7 @@ namespace movie_search::services {
             }
 
             if (match) {
-                results.push_back(m);
+                results.push_back(movie);
             }
         }
 

@@ -6,7 +6,7 @@
 
 namespace movie_parser::parsers
 {
-    std::vector<models::MovieRating> loadRatings(const std::string& filename) {
+    std::vector<models::MovieRating> load_ratings(const std::string& filename) {
         std::vector<models::MovieRating> ratings;
         std::ifstream file(filename);
         std::string line;

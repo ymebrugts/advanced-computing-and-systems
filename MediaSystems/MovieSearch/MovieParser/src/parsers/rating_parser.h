@@ -16,6 +16,6 @@ namespace movie_parser::parsers {
      * @param filename Path to ratings.dat
      * @return Vector of Rating structs
      */
-    std::vector<movie_parser::models::MovieRating> loadRatings(const std::string& filename);
+    std::vector<movie_parser::models::MovieRating> load_ratings(const std::string& filename);
 
 }

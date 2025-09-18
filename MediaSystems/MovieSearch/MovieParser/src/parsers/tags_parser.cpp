@@ -7,7 +7,7 @@
 
 namespace movie_parser::parsers
 {
-    std::vector<models::MovieTag> loadTags(const std::string& filename) {
+    std::vector<models::MovieTag> load_tags(const std::string& filename) {
         std::vector<models::MovieTag> tags;
         std::ifstream file(filename);
         std::string line;

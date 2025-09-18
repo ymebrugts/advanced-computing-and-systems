@@ -20,17 +20,17 @@
 
 namespace moviesearch::services {
 	namespace {
-        void process_moviesearch_param(std::vector<std::string>& dest,
-            const std::string& optName,
+        void process_moviesearch_param(std::vector<std::string>& parsed_values,
+            const std::string& command_name,
             const std::vector<std::string>& args,
-            std::size_t& i,
-            movie_search::models::ParseResult& res) {
-            auto vals = shared::utils::collect_value_tokens(args, i);
+            std::size_t&  number_of_arguments,
+            movie_search::models::ParseResult& parse_result) {
+            auto vals = shared::utils::collect_value_tokens(args, number_of_arguments);
             if (vals.empty()) {
-                res.errors.push_back("Missing value for --" + optName);
+                parse_result.errors.push_back("Missing value for --" + command_name);
                 return;
             }
-            dest.insert(dest.end(), vals.begin(), vals.end());
+            parsed_values.insert(parsed_values.end(), vals.begin(), vals.end());
         }
 
 	    std::vector<std::string> preprocess_args(const std::vector<std::string>& rawArgs) {
@@ -50,101 +50,101 @@ namespace moviesearch::services {
 	        return args;
 	    }
 
-	    void handle_year_option(movie_search::models::Query& q, const std::vector<std::string>& args, std::size_t& i, movie_search::models::ParseResult& res) {
+	    void handle_year_option(movie_search::models::Query& query, const std::vector<std::string>& args, std::size_t& i, movie_search::models::ParseResult& res) {
 	        auto vals = shared::utils::collect_value_tokens(args, i);
 	        if (vals.empty()) {
-	            res.errors.push_back("Missing value for --year");
+	            res.errors.emplace_back("Missing value for --year");
 	            return;
 	        }
 	        if (vals.size() > 1) {
-	            res.errors.push_back("Too many values for --year (expected one)");
+	            res.errors.emplace_back("Too many values for --year (expected one)");
 	            return;
 	        }
 	        try {
-	            q.year = std::stoi(vals.front());
-	            q.has_year = true;
+	            query.year = std::stoi(vals.front());
+	            query.has_year = true;
 	        }
 	        catch (...) {
 	            res.errors.push_back("Invalid year: '" + vals.front() + "'");
 	        }
 	    }
 
-	    void parse_args_into_query(const std::vector<std::string>& args, movie_search::models::Query& q, movie_search::models::ParseResult& res) {
+	    void parse_tokenized_args_into_query(const std::vector<std::string>& tokenized_args, movie_search::models::Query& query, movie_search::models::ParseResult& parse_result) {
 	        std::size_t i = 0;
-	        while (i < args.size()) {
-	            const std::string tok = args[i++];
+	        while (i < tokenized_args.size()) {
+	            const std::string& token = tokenized_args[i++];
 
-	            if (!shared::utils::token_is_option(tok)) {
-	                res.warnings.push_back("Ignoring unexpected token: '" + tok + "'");
+	            if (!shared::utils::token_is_option(token)) {
+	                parse_result.warnings.push_back("Ignoring unexpected token: '" + token + "'");
 	                continue;
 	            }
 
-	            if (shared::utils::matches_option(tok, "title")) {
-	                process_moviesearch_param(q.title_keywords, "title", args, i, res);
+	            if (shared::utils::matches_option(token, "title")) {
+	                process_moviesearch_param(query.title_keywords, "title", tokenized_args, i, parse_result);
 	            }
-	            else if (shared::utils::matches_option(tok, "year")) {
-	                handle_year_option(q, args, i, res);
+	            else if (shared::utils::matches_option(token, "year")) {
+	                handle_year_option(query, tokenized_args, i, parse_result);
 	            }
-	            else if (shared::utils::matches_option(tok, "genre") || shared::utils::matches_option(tok, "genres")) {
-	                process_moviesearch_param(q.genres, "genre", args, i, res);
+	            else if (shared::utils::matches_option(token, "genre") || shared::utils::matches_option(token, "genres")) {
+	                process_moviesearch_param(query.genres, "genre", tokenized_args, i, parse_result);
 	            }
-	            else if (shared::utils::matches_option(tok, "tag") || shared::utils::matches_option(tok, "tags")) {
-	                process_moviesearch_param(q.tags, "tag", args, i, res);
+	            else if (shared::utils::matches_option(token, "tag") || shared::utils::matches_option(token, "tags")) {
+	                process_moviesearch_param(query.tags, "tag", tokenized_args, i, parse_result);
 	            }
 	            else {
-	                res.errors.push_back("Unknown option: '" + tok + "'");
-	                while (i < args.size() && !shared::utils::token_is_option(args[i])) ++i; // skip
+	                parse_result.errors.push_back("Unknown option: '" + token + "'");
+	                while (i < tokenized_args.size() && !shared::utils::token_is_option(tokenized_args[i])) ++i; // skip
 	            }
 	        }
 	    }
 
-	    void finalize_result(movie_search::models::Query& q, movie_search::models::ParseResult& res) {
+	    void finalize_result(movie_search::models::Query& query, movie_search::models::ParseResult& parse_result) {
 	        // Require at least one filter
-	        if (q.title_keywords.empty() && !q.has_year && q.genres.empty() && q.tags.empty()) {
-	            res.errors.push_back("moviesearch requires at least one filter (--title/--year/--genre/--tag)");
+	        if (query.title_keywords.empty() && !query.has_year && query.genres.empty() && query.tags.empty()) {
+	            parse_result.errors.push_back("moviesearch requires at least one filter (--title/--year/--genre/--tag)");
 	        }
 
 	        // Dedupe lists while preserving order
-	        shared::utils::dedupe_preserve_order(q.title_keywords);
-	        shared::utils::dedupe_preserve_order(q.genres);
-	        shared::utils::dedupe_preserve_order(q.tags);
+	        shared::utils::dedupe_preserve_order(query.title_keywords);
+	        shared::utils::dedupe_preserve_order(query.genres);
+	        shared::utils::dedupe_preserve_order(query.tags);
 
-	        res.ok = res.errors.empty();
+	        parse_result.ok = parse_result.errors.empty();
 	    }
 	}
 
-	std::vector<std::string> tokenize_command_line(const std::string& raw) {
+	std::vector<std::string> tokenize_command_line(const std::string& terminal_input) {
 		std::vector<std::string> tokens;
-		std::string cur;
+		std::string current_token;
 
-		for (char c : raw) {
-			if (std::isspace(static_cast<unsigned char>(c))) {
-				if (!cur.empty()) {
-					tokens.emplace_back(std::move(cur));
-					cur.clear();
+		for (char input_char : terminal_input) {
+			if (std::isspace(static_cast<unsigned char>(input_char))) {
+				if (!current_token.empty()) {
+					tokens.emplace_back(std::move(current_token));
+					current_token.clear();
 				}
 			}
 			else {
-				cur.push_back(c);
+				current_token.push_back(input_char);
 			}
 		}
 
-		if (!cur.empty()) {
-			tokens.emplace_back(std::move(cur));
+		if (!current_token.empty()) {
+			tokens.emplace_back(std::move(current_token));
 		}
 
 		return tokens;
 	}
 
-	movie_search::models::ParseResult parse_moviesearch_tokens(const std::vector<std::string>& rawArgs) {
-		movie_search::models::ParseResult res;
-		movie_search::models::Query& q = res.query;
+	movie_search::models::ParseResult parse_moviesearch_tokens(const std::vector<std::string>& raw_args) {
+		movie_search::models::ParseResult parse_result;
+		movie_search::models::Query& query = parse_result.query;
 
-	    auto args = preprocess_args(rawArgs);
-	    parse_args_into_query(args, q, res);
-	    finalize_result(q, res);
+	    auto tokenized_args = preprocess_args(raw_args);
+	    parse_tokenized_args_into_query(tokenized_args, query, parse_result);
+	    finalize_result(query, parse_result);
 
-	    return res;
+	    return parse_result;
 	}   
 
 }

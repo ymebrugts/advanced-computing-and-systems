@@ -12,23 +12,23 @@ namespace movie_parser::parsers
     namespace
     {
         std::optional<int> extractYear(const std::string& title) {
-            auto pos1 = title.find_last_of('(');
-            auto pos2 = title.find_last_of(')');
+            const auto last_left_parentheses = title.find_last_of('(');
+            const auto last_right_parentheses = title.find_last_of(')');
 
-            if (pos1 == std::string::npos || pos2 == std::string::npos || pos2 <= pos1 + 1) {
+            if (last_left_parentheses == std::string::npos || last_right_parentheses == std::string::npos || last_right_parentheses <= last_left_parentheses + 1) {
                 return std::nullopt; // no valid parentheses
             }
 
-            auto yearStr = title.substr(pos1 + 1, pos2 - pos1 - 1);
+            auto year_str = title.substr(last_left_parentheses + 1, last_right_parentheses - last_left_parentheses - 1);
 
             // Early return if not all digits
-            if (std::ranges::any_of(yearStr, [](unsigned char c) { return !std::isdigit(c); }))
+            if (std::ranges::any_of(year_str, [](const unsigned char c) { return !std::isdigit(c); }))
             {
                 return std::nullopt;
             }        
 
             try {
-                return std::stoi(yearStr);
+                return std::stoi(year_str);
             }
             catch (const std::out_of_range&) {
                 return std::nullopt; // number too large
@@ -37,7 +37,7 @@ namespace movie_parser::parsers
     }
 
 
-    std::vector<movie_parser::models::Movie> loadMovies(const std::string& filename) {
+    std::vector<movie_parser::models::Movie> load_movies(const std::string& filename) {
         std::vector<movie_parser::models::Movie> movies;
         std::ifstream file(filename);
         std::string line;
