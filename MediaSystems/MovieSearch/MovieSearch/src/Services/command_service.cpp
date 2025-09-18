@@ -63,7 +63,7 @@ namespace moviesearch::services {
 	            }
 
 	            if (shared::utils::matches_option(token, "title")) {
-	                process_moviesearch_param(query.title_keywords, "title", tokenized_args, i, parse_result);
+	                process_moviesearch_param(query.titles, "title", tokenized_args, i, parse_result);
 	            }
 	            else if (shared::utils::matches_option(token, "year")) {
 	                handle_year_option(query, tokenized_args, i, parse_result);
@@ -83,12 +83,12 @@ namespace moviesearch::services {
 
 	    void finalize_result(movie_search::models::Query& query, movie_search::models::ParseResult& parse_result) {
 	        // Require at least one filter
-	        if (query.title_keywords.empty() && !query.has_year && query.genres.empty() && query.tags.empty()) {
+	        if (query.titles.empty() && !query.has_year && query.genres.empty() && query.tags.empty()) {
 	            parse_result.errors.push_back("moviesearch requires at least one filter (--title/--year/--genre/--tag)");
 	        }
 
 	        // Dedupe lists while preserving order
-	        shared::utils::dedupe_preserve_order(query.title_keywords);
+	        shared::utils::dedupe_preserve_order(query.titles);
 	        shared::utils::dedupe_preserve_order(query.genres);
 	        shared::utils::dedupe_preserve_order(query.tags);
 
@@ -119,7 +119,7 @@ namespace moviesearch::services {
 		return tokens;
 	}
 
-	movie_search::models::ParseResult parse_moviesearch_tokens(const std::vector<std::string>& arguments) {
+	movie_search::models::ParseResult parse_moviesearch_line(const std::vector<std::string>& arguments) {
 		movie_search::models::ParseResult parse_result;
 		movie_search::models::Query& query = parse_result.query;
 

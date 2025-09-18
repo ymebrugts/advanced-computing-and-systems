@@ -47,19 +47,7 @@ namespace shared::utils {
         return tokens;
     }
 
-    // Case-insensitive substring search
-    bool insensitive_contains(const std::string& text, const std::string& word) {
-        auto it = std::search(
-            text.begin(), text.end(),
-            word.begin(), word.end(),
-            [](unsigned char ch1, unsigned char ch2) {
-                return std::tolower(ch1) == std::tolower(ch2);
-            }
-        );
-        return it != text.end();
-    }
-
-    bool insensitive_contains_word(const std::string& text, const std::string& word) {
+    bool case_insensitive_contains_word(const std::string& text, const std::string& word) {
         if (word.empty()) return false;
 
         // Split text into tokens by spaces (or smarter delimiters later)
@@ -79,6 +67,17 @@ namespace shared::utils {
             }
         }
         return false;
+    }
+
+    std::string join(const std::vector<std::string>& vec, const std::string& delimiter) {
+        std::string result;
+        for (size_t i = 0; i < vec.size(); ++i) {
+            result += vec[i];
+            if (i + 1 < vec.size()) {
+                result += delimiter;
+            }
+        }
+        return result;
     }
 
 }

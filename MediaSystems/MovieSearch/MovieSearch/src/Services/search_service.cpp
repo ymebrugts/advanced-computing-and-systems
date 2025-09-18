@@ -1,4 +1,4 @@
-/**
+﻿/**
  * author Yme Brugts (s4536622)
  * @file search_service.cpp
  * @date 2025-09-17
@@ -17,6 +17,36 @@ namespace {
 
 namespace movie_search::services {
 
+    bool check_match_list(const std::vector<std::string>& queried_list, const std::vector<std::string>& genres) {
+        for (const auto& query : queried_list) {
+            bool found = false;
+            for (const auto& parsed_token : genres) {
+                if (shared::utils::case_insensitive_contains_word(parsed_token, query))
+                {
+                    found = true; break;
+                }
+            }
+            if (!found) return false; // one didn't match
+        }
+        return true; // all queries matched
+    }
+
+    bool check_match_tags(const movie_parser::models::Movie& movie,
+        const std::vector<std::string>& queried_list,
+        const std::vector<movie_parser::models::MovieTag>& tags) {
+        for (const auto& query : queried_list) {
+            bool found = false;
+            for (const auto& tag : tags) {
+                if (tag.movie_id == movie.movie_id &&
+                    shared::utils::case_insensitive_contains_word(tag.tag, query)) {
+                    found = true; break;
+                }
+            }
+            if (!found) return false; // one didn't match
+        }
+        return true; // all queries matched
+    }
+
     std::vector<movie_parser::models::Movie> search_movies(
         const movie_search::models::Query& query,
         const std::vector<movie_parser::models::Movie>& movies,
@@ -28,8 +58,8 @@ namespace movie_search::services {
             bool match = true;
 
             // All title keywords must appear and case insensitive
-            for (const auto& keyword : query.title_keywords) {
-                if (!shared::utils::insensitive_contains_word(movie.title, keyword)) {
+            for (const auto& keyword : query.titles) {
+                if (!shared::utils::case_insensitive_contains_word(movie.title, keyword)) {
                     match = false;
                     break;
                 }
@@ -44,31 +74,23 @@ namespace movie_search::services {
 
             // All genres must appear
             if (match && !query.genres.empty()) {
-                for (const auto& genre : query.genres) {
-                    if (!shared::utils::insensitive_contains_word(movie.genres, genre)) {
-                        match = false;
-                        break;
-                    }
+
+                if (!check_match_list(query.genres, movie.genres))
+                {
+                    match = false;
                 }
             }
 
-            // Tags. At least one must match, across all movie tags.
+            // Tags. All must match, across all movie tags.
             // Since human made it uses contains instead of matching on the whole word
             if (match && !query.tags.empty()) {
-                bool found = false;
-                for (const auto& tag : tags) {
-                    if (tag.movie_id == movie.movie_id) {
-                        for (const auto& query_tag : query.tags) {
-                            if (shared::utils::insensitive_contains_word(tag.tag, query_tag)) {
-                                found = true;
-                                break;
-                            }
-                        }
-                    }
-                    if (found) break;
+
+                if (!check_match_tags(movie, query.tags, tags))
+                {
+                    match = false;
                 }
-                if (!found) match = false;
             }
+
 
             if (match) {
                 results.push_back(movie);
@@ -77,5 +99,4 @@ namespace movie_search::services {
 
         return results;
     }
-
 }

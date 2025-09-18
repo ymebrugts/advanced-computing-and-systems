@@ -47,7 +47,20 @@ namespace shared::utils {
 	 */
     std::vector<std::string> split(const std::string& s, const std::string& delimiter = "::");
 
-    bool insensitive_contains(const std::string& text, const std::string& word);
+	/**
+	 * @brief Check if a word is present in text, ignoring case
+	 * @param text Input text
+	 * @param word Word to search for
+	 * @return True if the word is found, false otherwise
+	 */
+    bool case_insensitive_contains_word(const std::string& text, const std::string& word);
 
-    bool insensitive_contains_word(const std::string& text, const std::string& word);
+	/**
+	 * @brief Join a vector of strings into a single string
+	 * @param vec Vector of strings
+	 * @param delimiter Delimiter to place between strings (default "|")
+	 * @return Concatenated string with delimiters
+	 */
+    std::string join(const std::vector<std::string>& vec, const std::string& delimiter = "|");
+
 }

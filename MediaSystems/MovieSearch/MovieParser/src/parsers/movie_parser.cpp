@@ -48,7 +48,7 @@ namespace movie_parser::parsers
                 movie_parser::models::Movie movie;
                 movie.movie_id = std::stoi(tokens[0]);
                 movie.title = tokens[1];
-                movie.genres = tokens[2];
+                movie.genres = shared::utils::split(tokens[2], "|");
                 movie.year = extract_year(movie.title);
                 movies.push_back(movie);
             }

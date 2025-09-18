@@ -18,6 +18,7 @@
 #include "rating_parser.h"
 #include "tags_parser.h"
 #include "movie_parser.h"
+#include "string_utils.h"
 #include "models/Query.h"
 #include "Services/search_service.h"
 
@@ -71,7 +72,7 @@ void RunProgram(std::istream& in, std::ostream& out, bool interactive_mode) {
             if (tokens.empty()) continue;
 
             auto args = std::vector<std::string>(tokens.begin() + 1, tokens.end());
-            auto parse_result = moviesearch::services::parse_moviesearch_tokens(args);
+            auto parse_result = moviesearch::services::parse_moviesearch_line(args);
             for (const auto& w : parse_result.warnings) out << "Warning: " << w << "\n";
             if (!parse_result.ok) {
                 for (const auto& e : parse_result.errors) out << "Error: " << e << "\n";
@@ -83,7 +84,7 @@ void RunProgram(std::istream& in, std::ostream& out, bool interactive_mode) {
             auto matches = movie_search::services::search_movies(parse_result.query, movies, tags);
 
             for (const auto& m : matches) {
-                out << m.movie_id << "::" << m.title << "::" << m.genres << "\n";
+                out << m.movie_id << "::" << m.title << "::" << shared::utils::join(m.genres, "|") << "\n";
             }
         }
         else if (cmd == "printquery") {
@@ -91,7 +92,7 @@ void RunProgram(std::istream& in, std::ostream& out, bool interactive_mode) {
             if (tokens.empty()) continue;
 
             auto args = std::vector<std::string>(tokens.begin() + 1, tokens.end());
-            auto parse_result = moviesearch::services::parse_moviesearch_tokens(args);
+            auto parse_result = moviesearch::services::parse_moviesearch_line(args);
             for (const auto& w : parse_result.warnings) out << "Warning: " << w << "\n";
             if (!parse_result.ok) {
                 for (const auto& e : parse_result.errors) out << "Error: " << e << "\n";
@@ -104,7 +105,7 @@ void RunProgram(std::istream& in, std::ostream& out, bool interactive_mode) {
             auto movies = movie_parser::parsers::load_movies("movies.dat");
 
             for (const auto& m : movies) {
-                out << m.movie_id << "::" << m.title << "::" << m.genres << "\n";
+                out << m.movie_id << "::" << m.title << "::" << shared::utils::join(m.genres, "|") << "\n";
             }
         }
         else if (cmd == "printallmoviestofile")
@@ -117,7 +118,7 @@ void RunProgram(std::istream& in, std::ostream& out, bool interactive_mode) {
             }
             else {
                 for (const auto& m : movies) {
-                    file << m.movie_id << "::" << m.title << "::" << m.genres << "\n";
+                    file << m.movie_id << "::" << m.title << "::" << shared::utils::join(m.genres, "|") << "\n";
                 }
                 out << "Wrote " << movies.size() << " movies to all_movies.txt\n";
             }
@@ -137,13 +138,13 @@ void RunProgram(std::istream& in, std::ostream& out, bool interactive_mode) {
 
 void print_query(std::ostream& out, const movie_search::models::Query& query) {
     out << "Parsed movie search (AND semantics):\n";
-    out << "  title_keywords : ";
-    if (query.title_keywords.empty()) out << "(none)\n";
+    out << "  titles : ";
+    if (query.titles.empty()) out << "(none)\n";
     else {
         out << "[";
-        for (std::size_t i = 0; i < query.title_keywords.size(); ++i) {
+        for (std::size_t i = 0; i < query.titles.size(); ++i) {
             if (i) out << ", ";
-            out << "\"" << query.title_keywords[i] << "\"";
+            out << "\"" << query.titles[i] << "\"";
         }
         out << "]\n";
     }

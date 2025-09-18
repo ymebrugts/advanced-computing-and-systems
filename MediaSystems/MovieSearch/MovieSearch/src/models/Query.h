@@ -11,7 +11,7 @@
 namespace movie_search::models {
     // A structured representation of the parsed query.
     struct Query {
-        std::vector<std::string> title_keywords;
+        std::vector<std::string> titles;
         bool has_year = false;
         int  year = 0;
         std::vector<std::string> genres;

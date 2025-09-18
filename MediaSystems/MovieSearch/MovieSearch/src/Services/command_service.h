@@ -18,7 +18,7 @@ namespace moviesearch::services {
 
     // Parse tokens that appear after the leading "moviesearch" token.
     // Recognized options: --title, --year, --genre, --tag 
-    movie_search::models::ParseResult parse_moviesearch_tokens(const std::vector<std::string>& args);
+    movie_search::models::ParseResult parse_moviesearch_line(const std::vector<std::string>& args);
 
     // parse a raw input line that starts with "moviesearch".
     movie_search::models::ParseResult parse_moviesearch_line(const std::string& line);
