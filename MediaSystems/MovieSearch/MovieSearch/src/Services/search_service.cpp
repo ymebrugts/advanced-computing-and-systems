@@ -59,7 +59,7 @@ namespace movie_search::services {
                 for (const auto& t : tags) {
                     if (t.movie_id == m.movie_id) {
                         for (const auto& qtag : q.tags) {
-                            if (shared::utils::insensitive_contains(t.tag, qtag)) {
+                            if (shared::utils::insensitive_contains_word(t.tag, qtag)) {
                                 found = true;
                                 break;
                             }
