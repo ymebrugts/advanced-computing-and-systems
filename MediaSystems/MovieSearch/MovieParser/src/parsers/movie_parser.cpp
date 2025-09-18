@@ -11,7 +11,7 @@ namespace movie_parser::parsers
 {
     namespace
     {
-        std::optional<int> extractYear(const std::string& title) {
+        std::optional<int> extract_year(const std::string& title) {
             const auto last_left_parentheses = title.find_last_of('(');
             const auto last_right_parentheses = title.find_last_of(')');
 
@@ -37,20 +37,20 @@ namespace movie_parser::parsers
     }
 
 
-    std::vector<movie_parser::models::Movie> load_movies(const std::string& filename) {
-        std::vector<movie_parser::models::Movie> movies;
+    std::vector<models::Movie> load_movies(const std::string& filename) {
+        std::vector<models::Movie> movies;
         std::ifstream file(filename);
         std::string line;
 
         while (std::getline(file, line)) {
             auto tokens = shared::utils::split(line, "::");
             if (tokens.size() == 3) {
-                movie_parser::models::Movie m;
-                m.movie_id = std::stoi(tokens[0]);
-                m.title = tokens[1];
-                m.genres = tokens[2];
-                m.year = extractYear(m.title);
-                movies.push_back(m);
+                movie_parser::models::Movie movie;
+                movie.movie_id = std::stoi(tokens[0]);
+                movie.title = tokens[1];
+                movie.genres = tokens[2];
+                movie.year = extract_year(movie.title);
+                movies.push_back(movie);
             }
         }
         return movies;

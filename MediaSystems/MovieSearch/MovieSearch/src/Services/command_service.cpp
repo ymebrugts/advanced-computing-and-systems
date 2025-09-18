@@ -33,23 +33,6 @@ namespace moviesearch::services {
             parsed_values.insert(parsed_values.end(), vals.begin(), vals.end());
         }
 
-	    std::vector<std::string> preprocess_args(const std::vector<std::string>& rawArgs) {
-	        std::vector<std::string> args;
-	        args.reserve(rawArgs.size());
-
-	        for (const auto& t : rawArgs) {
-	            auto [opt, attached] = shared::utils::split_opt_equals(t);
-	            if (!attached.empty() && shared::utils::token_is_option(opt)) {
-	                args.push_back(opt);
-	                args.push_back(attached);
-	            }
-	            else {
-	                args.push_back(t);
-	            }
-	        }
-	        return args;
-	    }
-
 	    void handle_year_option(movie_search::models::Query& query, const std::vector<std::string>& args, std::size_t& i, movie_search::models::ParseResult& res) {
 	        auto vals = shared::utils::collect_value_tokens(args, i);
 	        if (vals.empty()) {
@@ -136,12 +119,11 @@ namespace moviesearch::services {
 		return tokens;
 	}
 
-	movie_search::models::ParseResult parse_moviesearch_tokens(const std::vector<std::string>& raw_args) {
+	movie_search::models::ParseResult parse_moviesearch_tokens(const std::vector<std::string>& arguments) {
 		movie_search::models::ParseResult parse_result;
 		movie_search::models::Query& query = parse_result.query;
 
-	    auto tokenized_args = preprocess_args(raw_args);
-	    parse_tokenized_args_into_query(tokenized_args, query, parse_result);
+	    parse_tokenized_args_into_query(arguments, query, parse_result);
 	    finalize_result(query, parse_result);
 
 	    return parse_result;
