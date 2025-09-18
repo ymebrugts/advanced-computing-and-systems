@@ -1,0 +1,88 @@
+MovieSearch
+===========
+
+MovieSearch is a simple C++20 console application for exploring a movie dataset.
+It supports parsing movies.dat / tags.dat, filtering by title, year, genre, and tags,
+and printing results to the console or to a file.
+
+--------------------------------------------------
+Author
+--------------------------------------------------
+Yme Brugts
+s4536622
+
+--------------------------------------------------
+Build Instructions
+--------------------------------------------------
+
+Prerequisites:
+- C++ Compiler: g++ or clang++
+- Make: Unix-compatible make
+- .dat files should be placed next to the moviesearch_app binary
+
+1. Clean Build Artifacts:
+   make clean
+
+2. Compile the Program:
+   make
+
+
+This produces an executable called "moviesearch_app".
+
+--------------------------------------------------
+Usage
+--------------------------------------------------
+
+Interactive Mode (more user feedback):
+    ./moviesearch_app
+
+Non interactive mode (without any console output apart from the results)
+    ./moviesearch_app --no-menu
+
+
+--------------------------------------------------
+Available commands
+--------------------------------------------------
+
+  moviesearch [options]      Prepare and execute a movie search query
+    --title <keywords>       Title keywords (multi-word allowed)
+    --year  <YYYY>           Exact release year
+    --genre <g1,g2,...>      One or more genres
+    --tag   <t1,t2,...>      One or more tags
+
+  parse                      Parse datasets (movies.dat, tags.dat)
+  printquery [options]       Show parsed query structure without searching
+  printallmovies             Print all movies to stdout
+  printallmoviestofile       Write all movies to all_movies.txt
+  help                       Show this help message
+  end                        Exit the program
+
+Examples:
+  moviesearch --title Blood
+  moviesearch --title Blood --tag Upton
+  moviesearch --title "Las Vegas"
+  printallmoviestofile
+
+--------------------------------------------------
+Project Structure
+--------------------------------------------------
+
+MediaSystems/
+  MovieParser/      Parsers + models (Movie, Tags, etc.)
+  Shared/           Shared utilities (string_utils, cmdline_utils)
+  MovieSearch/      Main executable (services + RunProgram)
+  Dataset/          Contains movies.dat, tags.dat
+  makefile          Build script (Linux/WSL)
+  MovieSearch.sln   Visual Studio solution (Windows)
+
+--------------------------------------------------
+Notes
+--------------------------------------------------
+- Locale: On Linux/WSL, locale initialization is skipped.
+  On Windows, the program sets std::locale("en_US.UTF-8") for proper UTF-8 console I/O.
+- The dataset (movies.dat, tags.dat) must be placed in the working directory.
+
+--------------------------------------------------
+License
+--------------------------------------------------
+See LICENSE.
