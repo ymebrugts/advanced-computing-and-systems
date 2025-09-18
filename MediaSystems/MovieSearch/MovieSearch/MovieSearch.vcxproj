@@ -135,6 +135,7 @@
     <ClCompile Include="src\program_runner.cpp" />
     <ClCompile Include="src\Services\command_service.cpp" />
     <ClCompile Include="src\Services\search_service.cpp" />
+    <ClCompile Include="src\Services\terminal_service.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\models\ParseResult.h" />
@@ -142,6 +143,7 @@
     <ClInclude Include="src\program_runner.h" />
     <ClInclude Include="src\Services\command_service.h" />
     <ClInclude Include="src\Services\search_service.h" />
+    <ClInclude Include="src\Services\terminal_service.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MovieParser\MovieParser.vcxproj">

@@ -15,12 +15,11 @@
 
 #include "Services/command_service.h"
 
-#include "rating_parser.h"
 #include "tags_parser.h"
 #include "movie_parser.h"
 #include "string_utils.h"
-#include "models/Query.h"
 #include "Services/search_service.h"
+#include "Services/terminal_service.h"
 
 
 const std::string HELP_MESSAGE =
@@ -45,7 +44,7 @@ const std::string HELP_MESSAGE =
 
 void RunProgram(std::istream& in, std::ostream& out, bool interactive_mode) {
     if (interactive_mode) {
-        out << HELP_MESSAGE << std::endl;
+        out << HELP_MESSAGE << '\n';
     }
 
     std::string input_line;
@@ -98,7 +97,7 @@ void RunProgram(std::istream& in, std::ostream& out, bool interactive_mode) {
                 for (const auto& e : parse_result.errors) out << "Error: " << e << "\n";
                 continue;
             }
-            print_query(out, parse_result.query);
+            movie_search::services::print_query(out, parse_result.query);
 		}
         else if (cmd == "printallmovies")
         {
@@ -136,39 +135,5 @@ void RunProgram(std::istream& in, std::ostream& out, bool interactive_mode) {
 }
 
 
-void print_query(std::ostream& out, const movie_search::models::Query& query) {
-    out << "Parsed movie search (AND semantics):\n";
-    out << "  titles : ";
-    if (query.titles.empty()) out << "(none)\n";
-    else {
-        out << "[";
-        for (std::size_t i = 0; i < query.titles.size(); ++i) {
-            if (i) out << ", ";
-            out << "\"" << query.titles[i] << "\"";
-        }
-        out << "]\n";
-    }
-    out << "  year           : " << (query.has_year ? std::to_string(query.year) : "(none)") << "\n";
-    out << "  genres         : ";
-    if (query.genres.empty()) out << "(none)\n";
-    else {
-        out << "[";
-        for (std::size_t i = 0; i < query.genres.size(); ++i) {
-            if (i) out << ", ";
-            out << query.genres[i];
-        }
-        out << "]\n";
-    }
-    out << "  tags           : ";
-    if (query.tags.empty()) out << "(none)\n";
-    else {
-        out << "[";
-        for (std::size_t i = 0; i < query.tags.size(); ++i) {
-            if (i) out << ", ";
-            out << query.tags[i];
-        }
-        out << "]\n";
-    }
-    out << "(execution not implemented; parsing only)\n";
-}
+
 

@@ -10,5 +10,3 @@
 #include "models/Query.h"
 
 void RunProgram(std::istream& in, std::ostream& out, bool interactive_mode);
-
-void print_query(std::ostream& out, const movie_search::models::Query& query);
