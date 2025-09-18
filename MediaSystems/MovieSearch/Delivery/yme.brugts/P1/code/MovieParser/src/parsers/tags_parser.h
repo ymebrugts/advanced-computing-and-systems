@@ -16,6 +16,6 @@ namespace movie_parser::parsers {
      * @param filename Path to tags.dat
      * @return Vector of Tag structs
      */
-    std::vector<movie_parser::models::MovieTag> loadTags(const std::string& filename);
+    std::vector<movie_parser::models::MovieTag> load_tags(const std::string& filename);
 
 }

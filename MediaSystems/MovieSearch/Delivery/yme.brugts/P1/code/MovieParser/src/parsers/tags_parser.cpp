@@ -7,7 +7,7 @@
 
 namespace movie_parser::parsers
 {
-    std::vector<models::MovieTag> loadTags(const std::string& filename) {
+    std::vector<models::MovieTag> load_tags(const std::string& filename) {
         std::vector<models::MovieTag> tags;
         std::ifstream file(filename);
         std::string line;
@@ -15,12 +15,12 @@ namespace movie_parser::parsers
         while (std::getline(file, line)) {
             auto tokens = shared::utils::split(line, "::");
             if (tokens.size() == 4) {
-                models::MovieTag t;
-                t.user_id = std::stoi(tokens[0]);
-                t.movie_id = std::stoi(tokens[1]);
-                t.tag = tokens[2];
-                t.timestamp = std::stol(tokens[3]);
-                tags.push_back(t);
+                models::MovieTag movie_tag;
+                movie_tag.user_id = std::stoi(tokens[0]);
+                movie_tag.movie_id = std::stoi(tokens[1]);
+                movie_tag.tag = tokens[2];
+                movie_tag.timestamp = std::stol(tokens[3]);
+                tags.push_back(movie_tag);
             }
         }
         return tags;

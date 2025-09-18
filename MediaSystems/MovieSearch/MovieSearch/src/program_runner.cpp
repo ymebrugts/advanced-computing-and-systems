@@ -50,6 +50,7 @@ void RunProgram(std::istream& in, std::ostream& out, bool interactive_mode) {
     std::string input_line;
     while (true) {
         if (interactive_mode) {
+            out << "\n";
             out << "Enter command: ";
             out.flush();
         }
@@ -72,7 +73,7 @@ void RunProgram(std::istream& in, std::ostream& out, bool interactive_mode) {
 
             auto args = std::vector<std::string>(tokens.begin() + 1, tokens.end());
             auto parse_result = moviesearch::services::parse_moviesearch_line(args);
-            for (const auto& w : parse_result.warnings) out << "Warning: " << w << "\n";
+            for (const auto& warning : parse_result.warnings) out << "Warning: " << warning << "\n";
             if (!parse_result.ok) {
                 for (const auto& e : parse_result.errors) out << "Error: " << e << "\n";
                 continue;
@@ -82,8 +83,8 @@ void RunProgram(std::istream& in, std::ostream& out, bool interactive_mode) {
 
             auto matches = movie_search::services::search_movies(parse_result.query, movies, tags);
 
-            for (const auto& m : matches) {
-                out << m.movie_id << "::" << m.title << "::" << shared::utils::join(m.genres, "|") << "\n";
+            for (const auto& movie : matches) {
+                out << movie.movie_id << "::" << movie.title << "::" << shared::utils::join(movie.genres, "|") << "\n";
             }
         }
         else if (cmd == "print") {
@@ -92,7 +93,7 @@ void RunProgram(std::istream& in, std::ostream& out, bool interactive_mode) {
 
             auto args = std::vector<std::string>(tokens.begin() + 1, tokens.end());
             auto parse_result = moviesearch::services::parse_moviesearch_line(args);
-            for (const auto& w : parse_result.warnings) out << "Warning: " << w << "\n";
+            for (const auto& warning : parse_result.warnings) out << "Warning: " << warning << "\n";
             if (!parse_result.ok) {
                 for (const auto& e : parse_result.errors) out << "Error: " << e << "\n";
                 continue;
@@ -103,23 +104,43 @@ void RunProgram(std::istream& in, std::ostream& out, bool interactive_mode) {
         {
             auto movies = movie_parser::parsers::load_movies("movies.dat");
 
-            for (const auto& m : movies) {
-                out << m.movie_id << "::" << m.title << "::" << shared::utils::join(m.genres, "|") << "\n";
+            for (const auto& movie : movies) {
+                out << movie.movie_id << "::" << movie.title << "::" << shared::utils::join(movie.genres, "|") << "\n";
             }
         }
         else if (cmd == "alltofile")
         {
             auto movies = movie_parser::parsers::load_movies("movies.dat");
+            auto tags = movie_parser::parsers::load_tags("tags.dat");
 
-            std::ofstream file("all_movies.txt"); // choose your filename
-            if (!file) {
-                out << "Error: could not open all_movies.txt for writing\n";
-            }
-            else {
-                for (const auto& m : movies) {
-                    file << m.movie_id << "::" << m.title << "::" << shared::utils::join(m.genres, "|") << "\n";
+            // Write movies
+            {
+                std::ofstream movie_file("all_movies.txt");
+                if (!movie_file) {
+                    out << "Error: could not open all_movies.txt for writing\n";
                 }
-                out << "Wrote " << movies.size() << " movies to all_movies.txt\n";
+                else {
+                    for (const auto& movie : movies) {
+                        movie_file << movie.movie_id << "::" << movie.title << "::"
+                            << shared::utils::join(movie.genres, "|") << "\n";
+                    }
+                    out << "Wrote " << movies.size() << " movies to all_movies.txt\n";
+                }
+            }
+
+            // Write tags
+            {
+                std::ofstream tag_file("all_tags.txt");
+                if (!tag_file) {
+                    out << "Error: could not open all_tags.txt for writing\n";
+                }
+                else {
+                    for (const auto& tag : tags) {
+                        tag_file << tag.user_id << "::" << tag.movie_id << "::"
+                            << tag.tag << "::" << tag.timestamp << "\n";
+                    }
+                    out << "Wrote " << tags.size() << " tags to all_tags.txt\n";
+                }
             }
         }
         else if (cmd == "help") {

@@ -20,7 +20,7 @@ namespace movie_search::services {
      * @param tags Parsed tags from tags.dat
      * @return Vector of matching movies
      */
-    std::vector<movie_parser::models::Movie> searchMovies(
+    std::vector<movie_parser::models::Movie> search_movies(
         const movie_search::models::Query&,
         const std::vector<movie_parser::models::Movie>& movies,
         const std::vector<movie_parser::models::MovieTag>& tags

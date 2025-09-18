@@ -1,4 +1,4 @@
-/**
+﻿/**
  * author Yme Brugts (s4536622)
  * @file search_service.cpp
  * @date 2025-09-17
@@ -17,65 +17,87 @@ namespace {
 
 namespace movie_search::services {
 
-    std::vector<movie_parser::models::Movie> searchMovies(
-        const movie_search::models::Query& q,
+    namespace
+    {
+        bool match_genres(const std::vector<std::string>& queried_list, const std::vector<std::string>& genres) {
+            for (const auto& query : queried_list) {
+                bool found = false;
+                for (const auto& parsed_token : genres) {
+                    if (shared::utils::case_insensitive_contains_word(parsed_token, query))
+                    {
+                        found = true; break;
+                    }
+                }
+                if (!found) return false; // one didn't match
+            }
+            return true; // all queries matched
+        }
+
+        bool match_tags(const movie_parser::models::Movie& movie,
+            const std::vector<std::string>& queried_list,
+            const std::vector<movie_parser::models::MovieTag>& tags) {
+            for (const auto& query : queried_list) {
+                bool found = false;
+                for (const auto& tag : tags) {
+                    if (tag.movie_id == movie.movie_id &&
+                        shared::utils::case_insensitive_contains_word(tag.tag, query)) {
+                        found = true; break;
+                    }
+                }
+                if (!found) return false; // one didn't match
+            }
+            return true; // all queries matched
+        }
+    }
+
+    std::vector<movie_parser::models::Movie> search_movies(
+        const models::Query& query,
         const std::vector<movie_parser::models::Movie>& movies,
         const std::vector<movie_parser::models::MovieTag>& tags
     ) {
         std::vector<movie_parser::models::Movie> results;
 
-        for (const auto& m : movies) {
+        for (const auto& movie : movies) {
             bool match = true;
 
-            // All title keywords must appear and case insensitive
-            for (const auto& kw : q.title_keywords) {
-                if (!shared::utils::insensitive_contains_word(m.title, kw)) {
+            // All title keywords must appear
+            for (const auto& keyword : query.titles) {
+                if (!shared::utils::case_insensitive_contains_word(movie.title, keyword)) {
                     match = false;
                     break;
                 }
             }
 
             // Year filter
-            if (match && q.has_year) {
-                if (!m.year || *m.year != q.year) {
+            if (match && query.has_year) {
+                if (!movie.year || *movie.year != query.year) {
                 	match = false;
                 }
             }
 
             // All genres must appear
-            if (match && !q.genres.empty()) {
-                for (const auto& g : q.genres) {
-                    if (!shared::utils::insensitive_contains_word(m.genres, g)) {
-                        match = false;
-                        break;
-                    }
+            if (match && !query.genres.empty()) {
+
+                if (!match_genres(query.genres, movie.genres))
+                {
+                    match = false;
                 }
             }
 
-            // Tags. At least one must match, across all movie tags.
-            // Since human made it uses contains instead of matching on the whole word
-            if (match && !q.tags.empty()) {
-                bool found = false;
-                for (const auto& t : tags) {
-                    if (t.movie_id == m.movie_id) {
-                        for (const auto& qtag : q.tags) {
-                            if (shared::utils::insensitive_contains(t.tag, qtag)) {
-                                found = true;
-                                break;
-                            }
-                        }
-                    }
-                    if (found) break;
+            // All tags must appear
+            if (match && !query.tags.empty()) {
+
+                if (!match_tags(movie, query.tags, tags))
+                {
+                    match = false;
                 }
-                if (!found) match = false;
             }
 
             if (match) {
-                results.push_back(m);
+                results.push_back(movie);
             }
         }
 
         return results;
     }
-
 }

@@ -1,3 +1,11 @@
+Important Notes
+==========
+All functionalities working as expected.
+Search is case insensitive AND per word/token
+
+tested in DM.0.21 on PC 0065042
+
+
 MovieSearch
 ===========
 
@@ -52,8 +60,8 @@ Available commands
 
   parse                      Parse datasets (movies.dat, tags.dat)
   printquery [options]       Show parsed query structure without searching
-  printallmovies             Print all movies to stdout
-  printallmoviestofile       Write all movies to all_movies.txt
+  printall                   Print all movies to stdout
+  alltofile                  Write all movies to all_movies.txt
   help                       Show this help message
   end                        Exit the program
 
@@ -61,7 +69,7 @@ Examples:
   moviesearch --title Blood
   moviesearch --title Blood --tag Upton
   moviesearch --title "Las Vegas"
-  printallmoviestofile
+  alltofile
 
 --------------------------------------------------
 Project Structure

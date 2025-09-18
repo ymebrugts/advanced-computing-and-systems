@@ -13,15 +13,13 @@
 
 namespace moviesearch::services {
 
-    // Quoting-aware tokenizer for a single command line (normalizes Unicode dashes to '-').
+    // tokenizer for a single command line
     std::vector<std::string> tokenize_command_line(const std::string& line);
 
-    // Parse tokens that appear AFTER the leading "moviesearch" token.
+    // Parse tokens that appear after the leading "moviesearch" token.
     // Recognized options: --title, --year, --genre, --tag 
-    // Supports --opt value..., --opt=value, repeated flags, comma-separated lists
-    // and multi-word values (title keywords split on whitespace unless quoted).
-    movie_search::models::ParseResult parse_moviesearch_tokens(const std::vector<std::string>& args);
+    std::vector<std::string> tokenize_command_line(const std::string& terminal_input);
 
-    // Convenience: parse a raw input line that starts with "moviesearch ...".
-    movie_search::models::ParseResult parse_moviesearch_line(const std::string& line);
+    // parse a raw input line that starts with "moviesearch".
+    movie_search::models::ParseResult parse_moviesearch_line(const std::vector<std::string>& arguments);
 }

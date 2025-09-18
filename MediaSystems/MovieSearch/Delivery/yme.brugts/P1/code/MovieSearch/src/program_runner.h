@@ -9,6 +9,4 @@
 #include <ostream>
 #include "models/Query.h"
 
-void RunProgram(std::istream& in, std::ostream& out, bool interactiveMode);
-
-void print_query(std::ostream& out, const movie_search::models::Query& q);
+void RunProgram(std::istream& in, std::ostream& out, bool interactive_mode);

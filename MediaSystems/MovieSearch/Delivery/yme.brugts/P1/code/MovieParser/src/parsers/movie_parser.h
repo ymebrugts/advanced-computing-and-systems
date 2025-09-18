@@ -9,7 +9,7 @@
 
 #include <string>
 #include <vector>
-#include "../models/movie.h"
+#include "../models/Movie.h"
 
 namespace movie_parser::parsers {
 
@@ -18,6 +18,6 @@ namespace movie_parser::parsers {
      * @param filename Path to movies.dat
      * @return Vector of Movie structs
      */
-    std::vector<movie_parser::models::Movie> loadMovies(const std::string& filename);
+    std::vector<movie_parser::models::Movie> load_movies(const std::string& filename);
 
 }
