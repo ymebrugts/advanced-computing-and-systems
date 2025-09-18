@@ -28,8 +28,8 @@ namespace movie_search::services {
             bool match = true;
 
             // All title keywords must appear and case insensitive
-            for (const auto& kw : query.title_keywords) {
-                if (!shared::utils::insensitive_contains_word(movie.title, kw)) {
+            for (const auto& keyword : query.title_keywords) {
+                if (!shared::utils::insensitive_contains_word(movie.title, keyword)) {
                     match = false;
                     break;
                 }
@@ -44,8 +44,8 @@ namespace movie_search::services {
 
             // All genres must appear
             if (match && !query.genres.empty()) {
-                for (const auto& g : query.genres) {
-                    if (!shared::utils::insensitive_contains_word(movie.genres, g)) {
+                for (const auto& genre : query.genres) {
+                    if (!shared::utils::insensitive_contains_word(movie.genres, genre)) {
                         match = false;
                         break;
                     }
@@ -58,8 +58,8 @@ namespace movie_search::services {
                 bool found = false;
                 for (const auto& tag : tags) {
                     if (tag.movie_id == movie.movie_id) {
-                        for (const auto& queryTag : query.tags) {
-                            if (shared::utils::insensitive_contains_word(tag.tag, queryTag)) {
+                        for (const auto& query_tag : query.tags) {
+                            if (shared::utils::insensitive_contains_word(tag.tag, query_tag)) {
                                 found = true;
                                 break;
                             }

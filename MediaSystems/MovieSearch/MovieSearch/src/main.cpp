@@ -7,7 +7,7 @@
 #include <iostream>
 #include "program_runner.h"
 
-void ShowHelp(std::ostream& out) {
+void show_help(std::ostream& out) {
     out << "Usage: moviesearch [options]\n"
         << "Options:\n"
         << "  -h, --help                  Show this help message and exit\n"
@@ -37,19 +37,19 @@ int main(int argc, char** argv) {
 #endif
 
 
-    bool interactiveMode = true; // Default to interactive mode
+    bool interactive_mode = true; // Default to interactive mode
 
     if (argc > 1) {
         std::string arg = argv[1];
         if (arg == "--no-menu" || arg == "-n" || arg == "--debug" || arg == "-d") {
-            interactiveMode = false;
+            interactive_mode = false;
         }
         else if (arg == "--help" || arg == "-h") {
-            ShowHelp(std::cout);
+            show_help(std::cout);
             return 0;
         }
     }
 
-    RunProgram(std::cin, std::cout, interactiveMode);
+    RunProgram(std::cin, std::cout, interactive_mode);
     return 0;
 }

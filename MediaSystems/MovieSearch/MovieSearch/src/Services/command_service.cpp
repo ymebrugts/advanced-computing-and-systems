@@ -33,14 +33,14 @@ namespace moviesearch::services {
             parsed_values.insert(parsed_values.end(), vals.begin(), vals.end());
         }
 
-	    void handle_year_option(movie_search::models::Query& query, const std::vector<std::string>& args, std::size_t& i, movie_search::models::ParseResult& res) {
+	    void handle_year_option(movie_search::models::Query& query, const std::vector<std::string>& args, std::size_t& i, movie_search::models::ParseResult& parse_result) {
 	        auto vals = shared::utils::collect_value_tokens(args, i);
 	        if (vals.empty()) {
-	            res.errors.emplace_back("Missing value for --year");
+	            parse_result.errors.emplace_back("Missing value for --year");
 	            return;
 	        }
 	        if (vals.size() > 1) {
-	            res.errors.emplace_back("Too many values for --year (expected one)");
+	            parse_result.errors.emplace_back("Too many values for --year (expected one)");
 	            return;
 	        }
 	        try {
@@ -48,7 +48,7 @@ namespace moviesearch::services {
 	            query.has_year = true;
 	        }
 	        catch (...) {
-	            res.errors.push_back("Invalid year: '" + vals.front() + "'");
+	            parse_result.errors.push_back("Invalid year: '" + vals.front() + "'");
 	        }
 	    }
 
