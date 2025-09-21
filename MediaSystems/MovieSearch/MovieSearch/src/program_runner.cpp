@@ -24,7 +24,7 @@
 #include <find_all_by_member.h>
 
 #include "rating_parser.h"
-
+#include "parser_service.h"
 
 const std::string HELP_MESSAGE =
 	"Available commands:\n"
@@ -46,11 +46,13 @@ const std::string HELP_MESSAGE =
 	"  moviesearch --title Las Vegas\n";
 
 
+
 void run_program(std::istream& in, std::ostream& out, bool interactive_mode) {
     if (interactive_mode) {
         out << HELP_MESSAGE << '\n';
     }
-
+    movie_parser::services::parser_service parserService("movies.dat", "tags.dat", "ratings.dat");
+    parserService.preload_all();
     std::string input_line;
     while (true) {
         if (interactive_mode) {
@@ -68,8 +70,8 @@ void run_program(std::istream& in, std::ostream& out, bool interactive_mode) {
 
         if (cmd == "parse")
         {
-        	auto tags = movie_parser::parsers::load_tags("tags.dat");
-        	auto movies = movie_parser::parsers::load_movies("movies.dat");
+        	auto tags = parserService.get_tags();
+        	auto movies = parserService.get_movies();
         }
         else if (cmd == "moviesearch") {
             auto tokens = moviesearch::services::tokenize_command_line(input_line);
@@ -82,9 +84,9 @@ void run_program(std::istream& in, std::ostream& out, bool interactive_mode) {
                 for (const auto& e : parse_result.errors) out << "Error: " << e << "\n";
                 continue;
             }
-            auto tags = movie_parser::parsers::load_tags("tags.dat");
-            auto movies = movie_parser::parsers::load_movies("movies.dat");
-            auto ratings = movie_parser::parsers::load_ratings("ratings.dat");
+            auto tags = parserService.get_tags();
+            auto movies = parserService.get_movies();
+            auto ratings = parserService.get_ratings();
 
             auto matches = movie_search::services::search_movies(parse_result.query, movies, tags);
 
@@ -118,7 +120,7 @@ void run_program(std::istream& in, std::ostream& out, bool interactive_mode) {
 		}
         else if (cmd == "printall")
         {
-            auto movies = movie_parser::parsers::load_movies("movies.dat");
+            auto movies = parserService.get_movies();
 
             for (const auto& movie : movies) {
                 out << movie.movie_id << "::" << movie.title << "::" << shared::utils::join(movie.genres, "|") << "\n";
@@ -126,9 +128,9 @@ void run_program(std::istream& in, std::ostream& out, bool interactive_mode) {
         }
         else if (cmd == "alltofile")
         {
-            auto movies = movie_parser::parsers::load_movies("movies.dat");
-            auto tags = movie_parser::parsers::load_tags("tags.dat");
-            auto ratings = movie_parser::parsers::load_ratings("ratings.dat");
+            auto movies = parserService.get_movies();
+            auto tags = parserService.get_tags();
+            auto ratings = parserService.get_ratings();
             // Write movies
             {
                 std::ofstream movie_file("all_movies.txt");

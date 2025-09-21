@@ -104,7 +104,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Shared\src\utils;$(SolutionDir)MovieParser\src\parsers;$(SolutionDir)MovieParser\src\models</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Shared\src\utils;$(SolutionDir)MovieParser\src\parsers;$(SolutionDir)MovieParser\src\models;$(SolutionDir)MovieParser\src\services</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>

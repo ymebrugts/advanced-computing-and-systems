@@ -5,15 +5,9 @@
  */
 
 #include "search_service.h"
-#include <algorithm>
-#include <cctype>
 #include <optional>
 
 #include "string_utils.h"
-
-namespace {
-
-}
 
 namespace movie_search::services {
 
