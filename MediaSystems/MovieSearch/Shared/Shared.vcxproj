@@ -141,6 +141,7 @@
     <ClInclude Include="src\utils\cmdline_utils.h" />
     <ClInclude Include="src\utils\container_utils.h" />
     <ClInclude Include="src\utils\container_utils_impl.h" />
+    <ClInclude Include="src\utils\find_all_by_member.h" />
     <ClInclude Include="src\utils\find_by_member.h" />
     <ClInclude Include="src\utils\sort_by_member.h" />
     <ClInclude Include="src\utils\string_utils.h" />

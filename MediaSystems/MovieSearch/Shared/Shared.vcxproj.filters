@@ -36,6 +36,9 @@
     <ClInclude Include="src\utils\string_utils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\utils\find_all_by_member.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\utils\cmdline_utils.cpp">

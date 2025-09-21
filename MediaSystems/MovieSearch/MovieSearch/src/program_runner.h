@@ -9,4 +9,4 @@
 #include <ostream>
 #include "models/Query.h"
 
-void RunProgram(std::istream& in, std::ostream& out, bool interactive_mode);
+void run_program(std::istream& in, std::ostream& out, bool interactive_mode);

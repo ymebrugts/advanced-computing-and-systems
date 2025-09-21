@@ -50,6 +50,6 @@ int main(int argc, char** argv) {
         }
     }
 
-    RunProgram(std::cin, std::cout, interactive_mode);
+    run_program(std::cin, std::cout, interactive_mode);
     return 0;
 }

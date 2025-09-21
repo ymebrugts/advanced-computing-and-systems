@@ -13,6 +13,7 @@
 #include <string>
 #include <vector>
 
+#include "MovieRating.h"
 #include "Services/command_service.h"
 
 #include "tags_parser.h"
@@ -20,6 +21,9 @@
 #include "string_utils.h"
 #include "Services/search_service.h"
 #include "Services/terminal_service.h"
+#include <find_all_by_member.h>
+
+#include "rating_parser.h"
 
 
 const std::string HELP_MESSAGE =
@@ -42,7 +46,7 @@ const std::string HELP_MESSAGE =
 	"  moviesearch --title Las Vegas\n";
 
 
-void RunProgram(std::istream& in, std::ostream& out, bool interactive_mode) {
+void run_program(std::istream& in, std::ostream& out, bool interactive_mode) {
     if (interactive_mode) {
         out << HELP_MESSAGE << '\n';
     }
@@ -80,11 +84,23 @@ void RunProgram(std::istream& in, std::ostream& out, bool interactive_mode) {
             }
             auto tags = movie_parser::parsers::load_tags("tags.dat");
             auto movies = movie_parser::parsers::load_movies("movies.dat");
+            auto ratings = movie_parser::parsers::load_ratings("ratings.dat");
 
             auto matches = movie_search::services::search_movies(parse_result.query, movies, tags);
 
             for (const auto& movie : matches) {
-                out << movie.movie_id << "::" << movie.title << "::" << shared::utils::join(movie.genres, "|") << "\n";
+
+                double ratingSum = 0.0;
+                std::size_t count = 0;
+
+                for (const auto& rating : shared::utils::find_all_by_member(ratings, movie.movie_id, &movie_parser::models::MovieRating::movie_id)) {
+                    ratingSum += rating.rating;
+                    ++count;
+                }
+
+                double average = count > 0 ? ratingSum / count : 0.0;
+
+                out << movie.movie_id << "::" << movie.title << "::" << shared::utils::join(movie.genres, "|") << " " << average << "\n";
             }
         }
         else if (cmd == "print") {
@@ -112,7 +128,7 @@ void RunProgram(std::istream& in, std::ostream& out, bool interactive_mode) {
         {
             auto movies = movie_parser::parsers::load_movies("movies.dat");
             auto tags = movie_parser::parsers::load_tags("tags.dat");
-
+            auto ratings = movie_parser::parsers::load_ratings("ratings.dat");
             // Write movies
             {
                 std::ofstream movie_file("all_movies.txt");
@@ -140,6 +156,21 @@ void RunProgram(std::istream& in, std::ostream& out, bool interactive_mode) {
                             << tag.tag << "::" << tag.timestamp << "\n";
                     }
                     out << "Wrote " << tags.size() << " tags to all_tags.txt\n";
+                }
+            }
+
+            // Write ratings
+            {
+                std::ofstream rating_file("all_ratings.txt");
+                if (!rating_file) {
+                    out << "Error: could not open all_ratings.txt for writing\n";
+                }
+                else {
+                    for (const auto& rating : ratings) {
+                        rating_file << rating.user_id << "::" << rating.movie_id << "::"
+                            << rating.rating << "::" << rating.timestamp << "\n";
+                    }
+                    out << "Wrote " << movies.size() << " movies to all_ratings.txt\n";
                 }
             }
         }
