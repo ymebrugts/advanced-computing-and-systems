@@ -74,38 +74,6 @@ void run_program(std::istream& in, std::ostream& out, bool interactive_mode) {
         	auto movies = parserService.get_movies();
         	auto ratings = parserService.get_ratings();
         }
-        else if (cmd == "moviesearch") {
-            auto tokens = moviesearch::services::tokenize_command_line(input_line);
-            if (tokens.empty()) continue;
-
-            auto args = std::vector<std::string>(tokens.begin() + 1, tokens.end());
-            auto parse_result = moviesearch::services::parse_moviesearch_line(args);
-            for (const auto& warning : parse_result.warnings) out << "Warning: " << warning << "\n";
-            if (!parse_result.ok) {
-                for (const auto& e : parse_result.errors) out << "Error: " << e << "\n";
-                continue;
-            }
-            auto tags = parserService.get_tags();
-            auto movies = parserService.get_movies();
-            auto ratings = parserService.get_ratings();
-
-            auto matches = movie_search::services::search_movies(parse_result.query, movies, tags);
-
-            for (const auto& movie : matches) {
-
-                double ratingSum = 0.0;
-                std::size_t count = 0;
-
-                for (const auto& rating : shared::utils::find_all_by_member(ratings, movie.movie_id, &movie_parser::models::MovieRating::movie_id)) {
-                    ratingSum += rating.rating;
-                    ++count;
-                }
-
-                double average = count > 0 ? ratingSum / count : 0.0;
-
-                out << movie.movie_id << "::" << movie.title << "::" << shared::utils::join(movie.genres, "|") << " " << average << "\n";
-            }
-        }
         else if (cmd == "print") {
             auto tokens = moviesearch::services::tokenize_command_line(input_line);
             if (tokens.empty()) continue;
