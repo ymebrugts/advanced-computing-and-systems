@@ -38,20 +38,20 @@ namespace movie_parser::parsers
                 const char* line_end_ptr = (*char_ptr == '\n') ? char_ptr : (char_ptr + 1);
                 std::string_view line(line_start_ptr, line_end_ptr - line_start_ptr);
 
-                size_t p1 = line.find("::");
-                size_t p2 = line.find("::", p1 + 2);
-                size_t p3 = line.find("::", p2 + 2);
+                size_t positionDelimiterOne = line.find("::");
+                size_t positionDelimiterTwo = line.find("::", positionDelimiterOne + 2);
+                size_t positionDelimiterThree = line.find("::", positionDelimiterTwo + 2);
 
-                if (p1 != std::string_view::npos &&
-                    p2 != std::string_view::npos &&
-                    p3 != std::string_view::npos)
+                if (positionDelimiterOne != std::string_view::npos &&
+                    positionDelimiterTwo != std::string_view::npos &&
+                    positionDelimiterThree != std::string_view::npos)
                 {
                     models::MovieRating movie_rating;
-                    std::from_chars(line.data(), line.data() + p1, movie_rating.user_id);
-                    std::from_chars(line.data() + p1 + 2, line.data() + p2, movie_rating.movie_id);
+                    std::from_chars(line.data(), line.data() + positionDelimiterOne, movie_rating.user_id);
+                    std::from_chars(line.data() + positionDelimiterOne + 2, line.data() + positionDelimiterTwo, movie_rating.movie_id);
                     // rating. We only need .5 precision, so we can parse manually
                     {
-                        std::string_view rating_sv = line.substr(p2 + 2, p3 - (p2 + 2));
+                        std::string_view rating_sv = line.substr(positionDelimiterTwo + 2, positionDelimiterThree - (positionDelimiterTwo + 2));
                         int whole = 0;
                         std::from_chars(rating_sv.data(), rating_sv.data() + rating_sv.size(), whole);
 
@@ -64,8 +64,8 @@ namespace movie_parser::parsers
                             movie_rating.rating = static_cast<double>(whole);
                         }
                     }
-                    std::from_chars(line.data() + p3 + 2, line.data() + line.size(), movie_rating.timestamp);
-                    ratings.push_back(std::move(movie_rating));
+                    std::from_chars(line.data() + positionDelimiterThree + 2, line.data() + line.size(), movie_rating.timestamp);
+                    ratings.push_back(movie_rating);
                 }
 
                 ++current_line;
