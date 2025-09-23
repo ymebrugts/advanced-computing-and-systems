@@ -1,0 +1,58 @@
+
+#include <iomanip>
+#include <iostream>
+#include <sstream>
+
+#ifdef _WIN32
+#include <windows.h>
+#else
+#include <sys/ioctl.h>
+#include <unistd.h>
+#endif
+
+namespace movie_parser::utils
+{
+    void print_progress_top_right(int movies, int tags, int ratings) {
+        // Build progress string
+        std::ostringstream oss;
+        oss << "Movies: " << std::setw(3) << movies << "%"
+            << " Tags: " << std::setw(3) << tags << "%"
+            << " Ratings: " << std::setw(3) << ratings << "%";
+        std::string text = oss.str();
+
+        // Detect terminal width
+        int width = 80; // fallback default
+#ifdef _WIN32
+        CONSOLE_SCREEN_BUFFER_INFO csbi;
+        HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+        if (GetConsoleScreenBufferInfo(hConsole, &csbi)) {
+            width = csbi.srWindow.Right - csbi.srWindow.Left + 1;
+        }
+#else
+        struct winsize w {};
+        if (ioctl(STDOUT_FILENO, TIOCGWINSZ, &w) == 0 && w.ws_col > 0) {
+            width = w.ws_col;
+        }
+#endif
+
+        int col = (width - static_cast<int>(text.size()) + 1);
+        if (col < 1) col = 1;
+
+        // Save cursor
+        std::cout << "\033[s";
+
+        // Move to row 1, correct col
+        std::cout << "\033[1;" << col << "H";
+
+        // Clear to end of line
+        std::cout << "\033[K";
+
+        // Print text
+        std::cout << text;
+
+        // Restore cursor
+        std::cout << "\033[u" << std::flush;
+    }
+}
+
+

@@ -39,6 +39,9 @@
     <ClInclude Include="src\services\parser_service.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\utils\terminal_utils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\parsers\movie_parser.cpp">
@@ -51,6 +54,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\services\parser_service.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\utils\terminal_utils.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

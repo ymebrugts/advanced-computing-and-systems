@@ -151,6 +151,7 @@
     <ClInclude Include="src\parsers\rating_parser.h" />
     <ClInclude Include="src\parsers\tags_parser.h" />
     <ClInclude Include="src\services\parser_service.h" />
+    <ClInclude Include="src\utils\terminal_utils.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Shared\Shared.vcxproj">
@@ -162,6 +163,7 @@
     <ClCompile Include="src\parsers\rating_parser.cpp" />
     <ClCompile Include="src\parsers\tags_parser.cpp" />
     <ClCompile Include="src\services\parser_service.cpp" />
+    <ClCompile Include="src\utils\terminal_utils.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
