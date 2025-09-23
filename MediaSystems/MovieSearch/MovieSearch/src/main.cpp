@@ -35,7 +35,8 @@ int main(int argc, char** argv) {
     std::cout.imbue(std::locale());
     std::cin.imbue(std::locale());
 #endif
-
+    // Hide cursor
+    std::cout << "\033[?25l";
 
     bool interactive_mode = true; // Default to interactive mode
 

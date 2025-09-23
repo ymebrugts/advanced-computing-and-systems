@@ -52,6 +52,7 @@ void run_program(std::istream& in, std::ostream& out, bool interactive_mode) {
     if (interactive_mode) {
         out << HELP_MESSAGE << '\n';
     }
+
     movie_parser::services::parser_service parserService("movies.dat", "tags.dat", "ratings.dat");
     parserService.preload_all();
     std::string input_line;

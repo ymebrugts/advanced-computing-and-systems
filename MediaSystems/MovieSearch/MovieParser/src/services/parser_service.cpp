@@ -6,6 +6,8 @@
 #include <future>
 #include <iostream>
 #include <utility>
+#include "../utils/terminal_utils.h"
+
 
 namespace movie_parser::services {
 
@@ -51,16 +53,22 @@ namespace movie_parser::services {
         // Start reporter only once
         if (!reporter.joinable()) {
             reporter = std::thread([this] {
+                int movies = 0;
+                int tags = 0;
+                int ratings = 0;
                 while (!stop_reporting) {
-                    int movies = movies_progress.load();
-                    int tags = tags_progress.load();
-                    int ratings = ratings_progress.load();
+                    movies = movies_progress.load();
+                    tags = tags_progress.load();
+                    ratings = ratings_progress.load();
 
-                    print_progress_top_right(movies, tags, ratings);
+                    utils::print_progress_top_right(movies, tags, ratings);
 
                     if (movies == 100 && tags == 100 && ratings == 100) break;
                     std::this_thread::sleep_for(std::chrono::milliseconds(500));
                 }
+                // Show cursor since preloading is finished
+                std::cout << "\033[?25h" << std::flush;
+
             });
         }
     }

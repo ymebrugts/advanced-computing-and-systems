@@ -47,6 +47,5 @@ namespace movie_parser::services {
 			std::atomic<bool> stop_reporting{ false };
 			std::thread reporter;
 
-			void print_progress_top_right(int movies, int tags, int ratings);
 	};
 } 

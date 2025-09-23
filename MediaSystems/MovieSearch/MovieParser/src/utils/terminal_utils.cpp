@@ -20,6 +20,14 @@ namespace movie_parser::utils
             << " Ratings: " << std::setw(3) << ratings << "%";
         std::string text = oss.str();
 
+        static size_t last_len = 0;
+        size_t cur_len = text.size();
+        if (cur_len < last_len) {
+            text.append(last_len - cur_len, ' ');
+        }
+        last_len = cur_len;
+
+
         // Detect terminal width
         int width = 80; // fallback default
 #ifdef _WIN32
@@ -44,14 +52,13 @@ namespace movie_parser::utils
         // Move to row 1, correct col
         std::cout << "\033[1;" << col << "H";
 
-        // Clear to end of line
-        std::cout << "\033[K";
-
         // Print text
         std::cout << text;
 
         // Restore cursor
         std::cout << "\033[u" << std::flush;
+
+
     }
 }
 
