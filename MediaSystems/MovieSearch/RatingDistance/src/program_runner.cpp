@@ -24,6 +24,7 @@
 #include "cmdline_utils.h"
 #include "rating_parser.h"
 #include "parser_service.h"
+#include <numeric>
 
 const std::string HELP_MESSAGE =
 			"Available commands:\n"
@@ -99,7 +100,14 @@ void run_program(std::istream& in, std::ostream& out, bool interactive_mode) {
                 }
             }
 
-              out << "Breakpoint" << "\n";
+            if (!distances.empty()) {
+                double sum = std::accumulate(distances.begin(), distances.end(), 0.0);
+                double avg = sum / distances.size();
+                out << "The average rating distance is: " << avg << "\n";
+            }
+            else {
+                out << "There are no common movies which are rated by both users.\n";
+            }
         }
         else if (cmd == "alltofile")
         {
