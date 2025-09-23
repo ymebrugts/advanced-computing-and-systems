@@ -103,6 +103,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)Shared\src\utils;$(SolutionDir)MovieParser\src\parsers;$(SolutionDir)MovieParser\src\models;$(SolutionDir)MovieParser\src\services</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -126,9 +127,12 @@
   <ItemGroup>
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\program_runner.cpp" />
+    <ClCompile Include="src\services\command_service.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\models\Query.h" />
     <ClInclude Include="src\program_runner.h" />
+    <ClInclude Include="src\services\command_service.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MovieParser\MovieParser.vcxproj">

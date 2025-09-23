@@ -1,7 +1,7 @@
 /**
  * author Yme Brugts (s4536622)
  * @file program_runner.cpp
- * @date 2025-09-16
+ * @date 2025-09-23
  */
 
 
@@ -19,10 +19,9 @@
 #include "tags_parser.h"
 #include "movie_parser.h"
 #include "string_utils.h"
-#include "Services/search_service.h"
-#include "Services/terminal_service.h"
 #include <find_all_by_member.h>
 
+#include "cmdline_utils.h"
 #include "rating_parser.h"
 #include "parser_service.h"
 
@@ -74,26 +73,12 @@ void run_program(std::istream& in, std::ostream& out, bool interactive_mode) {
         	auto movies = parserService.get_movies();
         	auto ratings = parserService.get_ratings();
         }
-        else if (cmd == "print") {
-            auto tokens = moviesearch::services::tokenize_command_line(input_line);
-            if (tokens.empty()) continue;
-
-            auto args = std::vector<std::string>(tokens.begin() + 1, tokens.end());
-            auto parse_result = moviesearch::services::parse_moviesearch_line(args);
-            for (const auto& warning : parse_result.warnings) out << "Warning: " << warning << "\n";
-            if (!parse_result.ok) {
-                for (const auto& e : parse_result.errors) out << "Error: " << e << "\n";
-                continue;
-            }
-            movie_search::services::print_query(out, parse_result.query);
-		}
-        else if (cmd == "printall")
+        else if (cmd == "RatingDistance")
         {
-            auto movies = parserService.get_movies();
+            auto tokens = shared::utils::tokenize_command_line(input_line);
 
-            for (const auto& movie : movies) {
-                out << movie.movie_id << "::" << movie.title << "::" << shared::utils::join(movie.genres, "|") << "\n";
-            }
+            auto ratingDistanceQuery = rating_distance::services::parse_rating_distance_line(tokens);
+            out << "Breakpoint" << "\n";
         }
         else if (cmd == "alltofile")
         {

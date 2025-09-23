@@ -23,6 +23,7 @@
 #include "Services/terminal_service.h"
 #include <find_all_by_member.h>
 
+#include "cmdline_utils.h"
 #include "rating_parser.h"
 #include "parser_service.h"
 
@@ -75,7 +76,7 @@ void run_program(std::istream& in, std::ostream& out, bool interactive_mode) {
         	auto ratings = parserService.get_ratings();
         }
         else if (cmd == "moviesearch") {
-            auto tokens = moviesearch::services::tokenize_command_line(input_line);
+            auto tokens = shared::utils::tokenize_command_line(input_line);
             if (tokens.empty()) continue;
 
             auto args = std::vector<std::string>(tokens.begin() + 1, tokens.end());
@@ -107,7 +108,7 @@ void run_program(std::istream& in, std::ostream& out, bool interactive_mode) {
             }
         }
         else if (cmd == "print") {
-            auto tokens = moviesearch::services::tokenize_command_line(input_line);
+            auto tokens = shared::utils::tokenize_command_line(input_line);
             if (tokens.empty()) continue;
 
             auto args = std::vector<std::string>(tokens.begin() + 1, tokens.end());

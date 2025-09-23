@@ -41,4 +41,11 @@ namespace shared::utils {
      */
     std::vector<std::string> collect_value_tokens(const std::vector<std::string>& tokens, std::size_t& i);
 
+    /**
+	 * @brief Split input string into tokens separated by whitespace
+	 * @param terminal_input Command-line string to parse
+	 * @return Vector of tokens
+	 */
+    std::vector<std::string> tokenize_command_line(const std::string& terminal_input);
+
 }

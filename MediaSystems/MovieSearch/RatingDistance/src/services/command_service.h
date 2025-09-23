@@ -2,16 +2,17 @@
 /**
  * author Yme Brugts (s4536622)
  * @file command_service.h
- * @date 2025-09-16
+ * @date 2025-09-23
  */
 
 
 #include <string>
 #include <vector>
 #include <ostream>
-#include "../models/ParseResult.h"
 
-namespace moviesearch::services {
+#include "../models/Query.h"
+
+namespace rating_distance::services {
     // parse a raw input line that starts with "moviesearch".
-    movie_search::models::ParseResult parse_moviesearch_line(const std::vector<std::string>& arguments);
+    models::Query parse_rating_distance_line(const std::vector<std::string>& arguments);
 }

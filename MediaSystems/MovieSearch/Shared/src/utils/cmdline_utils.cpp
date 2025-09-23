@@ -33,4 +33,27 @@ namespace shared::utils {
         return vals;
     }
 
+    std::vector<std::string> tokenize_command_line(const std::string& terminal_input) {
+        std::vector<std::string> tokens;
+        std::string current_token;
+
+        for (char input_char : terminal_input) {
+            if (std::isspace(static_cast<unsigned char>(input_char))) {
+                if (!current_token.empty()) {
+                    tokens.emplace_back(std::move(current_token));
+                    current_token.clear();
+                }
+            }
+            else {
+                current_token.push_back(input_char);
+            }
+        }
+
+        if (!current_token.empty()) {
+            tokens.emplace_back(std::move(current_token));
+        }
+
+        return tokens;
+    }
+
 }
