@@ -16,8 +16,9 @@ namespace movie_parser::parsers {
     /**
      * @brief Load movies from a MovieLens movies.dat file.
      * @param filename Path to movies.dat
+     * @param progress Progress object to report back to
      * @return Vector of Movie structs
      */
-    std::vector<movie_parser::models::Movie> load_movies(const std::string& filename);
+    std::vector<movie_parser::models::Movie> load_movies(const std::string& filename, std::atomic<int>& progress);
 
 }

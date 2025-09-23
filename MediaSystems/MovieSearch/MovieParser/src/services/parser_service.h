@@ -14,6 +14,7 @@ namespace movie_parser::services {
 				std::string movies_file,
 				std::string tags_file,
 				std::string ratings_file);
+			~parser_service();
 
 			void preload_all();
 
@@ -30,6 +31,10 @@ namespace movie_parser::services {
 			std::future<std::vector<models::MovieTag>> tags_future;
 			std::future<std::vector<models::MovieRating>> ratings_future;
 
+			std::atomic<int> movies_progress{ 0 };
+			std::atomic<int> tags_progress{ 0 };
+			std::atomic<int> ratings_progress{ 0 };
+
 			bool movies_loaded = false;
 			bool tags_loaded = false;
 			bool ratings_loaded = false;
@@ -37,5 +42,11 @@ namespace movie_parser::services {
 		    std::vector<models::Movie> movies;
 		    std::vector<models::MovieTag> tags;
 		    std::vector<models::MovieRating> ratings;
+
+			// Reporter control
+			std::atomic<bool> stop_reporting{ false };
+			std::thread reporter;
+
+			void print_progress_top_right(int movies, int tags, int ratings);
 	};
 } 

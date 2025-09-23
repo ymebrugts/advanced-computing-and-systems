@@ -37,11 +37,18 @@ namespace movie_parser::parsers
     }
 
 
-    std::vector<models::Movie> load_movies(const std::string& filename) {
+    std::vector<models::Movie> load_movies(const std::string& filename, std::atomic<int>& progress) {
         std::vector<models::Movie> movies;
         std::ifstream file(filename);
         std::string line;
 
+        file.unsetf(std::ios_base::skipws);
+        size_t total_lines = std::count(std::istream_iterator<char>(file), std::istream_iterator<char>(), '\n');
+        file.clear();      
+        file.seekg(0, std::ios::beg);
+        file.setf(std::ios_base::skipws);
+
+        size_t current_line = 0;
         while (std::getline(file, line)) {
             auto tokens = shared::utils::split(line, "::");
             if (tokens.size() == 3) {
@@ -52,7 +59,15 @@ namespace movie_parser::parsers
                 movie.year = extract_year(movie.title);
                 movies.push_back(movie);
             }
+
+            ++current_line;
+            if (total_lines > 0) {
+                int percent = static_cast<int>((current_line * 100) / total_lines);
+                progress.store(percent, std::memory_order_relaxed);
+            }
         }
+        progress.store(100, std::memory_order_relaxed);
+
         return movies;
     }
 

@@ -26,23 +26,19 @@
 #include "parser_service.h"
 
 const std::string HELP_MESSAGE =
-	"Available commands:\n"
-	"  moviesearch [options]      Prepare and execute a movie search query\n"
-	"    --title <keywords>       Title keywords (multi-word allowed)\n"
-	"    --year  <YYYY>           Exact release year\n"
-	"    --genre <genres>         One or more genres\n"
-	"    --tag   <tags>           One or more tags\n"
-	"\n"
-	"  parse                      Parse datasets (movies.dat, tags.dat)\n"
-	"  print [options]            Show parsed query structure without searching\n"
-	"  printall                   Print all movies to stdout\n"
-	"  alltofile                  Write all movies to all_movies.txt\n"
-	"  help                       Show this help message\n"
-	"  end                        Exit the program\n"
-	"\n"
-	"Examples:\n"
-	"  moviesearch --title Blood --tag Upton\n"
-	"  moviesearch --title Las Vegas\n";
+			"Available commands:\n"
+			"  parse                      Load and parse datasets (movies.dat, tags.dat, ratings.dat)\n"
+			"  RatingDistance [options]   Perform a rating distance query\n"
+			"  alltofile                  Write all movies, tags, and ratings to text files\n"
+			"                               - all_movies.txt\n"
+			"                               - all_tags.txt\n"
+			"                               - all_ratings.txt\n"
+			"  help                       Show this help message\n"
+			"  end                        Exit the program\n"
+			"\n"
+			"Examples:\n"
+			"  RatingDistance --user 1 --user 2\n"
+			"  alltofile\n";
 
 
 
