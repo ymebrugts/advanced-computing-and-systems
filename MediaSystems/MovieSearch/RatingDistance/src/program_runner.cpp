@@ -72,9 +72,34 @@ void run_program(std::istream& in, std::ostream& out, bool interactive_mode) {
         else if (cmd == "RatingDistance")
         {
             auto tokens = shared::utils::tokenize_command_line(input_line);
-
             auto ratingDistanceQuery = rating_distance::services::parse_rating_distance_line(tokens);
-            out << "Breakpoint" << "\n";
+
+            auto ratings = parserService.get_ratings();
+
+            std::unordered_map<int, movie_parser::models::MovieRating> userOneMap;
+            for (const auto& rating : shared::utils::find_all_by_member(ratings, ratingDistanceQuery.user_id_one, &movie_parser::models::MovieRating::user_id)) {
+                userOneMap[rating.movie_id] = rating;
+            }
+
+            std::unordered_map<int, movie_parser::models::MovieRating> userTwoMap;
+            for (const auto& rating : shared::utils::find_all_by_member(ratings, ratingDistanceQuery.user_id_two, &movie_parser::models::MovieRating::user_id)) {
+                userTwoMap[rating.movie_id] = rating;
+            }
+
+            std::vector<double> distances;
+            for (const auto& [id, ratingOne] : userOneMap) {
+                auto movieRating = userTwoMap.find(id);
+                if (movieRating != userTwoMap.end()) {
+                    const auto& ratingTwo = movieRating->second;
+
+                    // your distance calculation, e.g. absolute difference:
+                    double distance = std::abs(ratingOne.rating - ratingTwo.rating);
+
+                    distances.push_back(distance);
+                }
+            }
+
+              out << "Breakpoint" << "\n";
         }
         else if (cmd == "alltofile")
         {

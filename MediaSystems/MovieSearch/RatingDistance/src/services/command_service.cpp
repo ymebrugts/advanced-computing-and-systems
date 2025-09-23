@@ -19,14 +19,14 @@ namespace rating_distance::services
 	rating_distance::models::Query parse_rating_distance_line(const std::vector<std::string>& arguments)
 	{
 		rating_distance::models::Query query;
-		if (arguments.size() != 2)
+		if (arguments.size() != 3)
 		{
-			throw std::invalid_argument("Expected exactly two user IDs for RatingDistance command.");
+			throw std::invalid_argument("Expected exactly one command and two user IDs for RatingDistance command.");
 		}
 		try
 		{
-			query.user_id_one = std::stoi(arguments[0]);
-			query.user_id_two = std::stoi(arguments[1]);
+			query.user_id_one = std::stoi(arguments[1]);
+			query.user_id_two = std::stoi(arguments[2]);
 		}
 		catch (const std::exception&)
 		{

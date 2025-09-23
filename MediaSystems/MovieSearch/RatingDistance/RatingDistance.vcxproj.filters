@@ -24,6 +24,9 @@
     <ClCompile Include="src\services\command_service.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\services\distance_service.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\program_runner.h">
@@ -33,6 +36,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\models\Query.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\services\distance_service.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

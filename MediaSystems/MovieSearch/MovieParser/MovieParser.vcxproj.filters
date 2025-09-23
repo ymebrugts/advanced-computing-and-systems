@@ -42,6 +42,9 @@
     <ClInclude Include="src\utils\terminal_utils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\parsers\mapped_file.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\parsers\movie_parser.cpp">
