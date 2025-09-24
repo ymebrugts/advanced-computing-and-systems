@@ -73,45 +73,89 @@ namespace movie_parser::services {
         }
     }
 
-    const std::vector<movie_parser::models::Movie>& parser_service::get_movies() {
+    void parser_service::ensure_movies_loaded()
+    {
         if (!movies_loaded) {
             if (!movies_future.valid()) {
                 movies_future = std::async(std::launch::async, [this] {
-					return movie_parser::parsers::load_movies(movies_file, movies_progress);
-                });
+                    return movie_parser::parsers::load_movies(movies_file, movies_progress);
+                    });
             }
             movies = movies_future.get();
             movies_loaded = true;
         }
-        return movies;
     }
 
-    const std::vector<movie_parser::models::MovieTag>& parser_service::get_tags() {
+    void parser_service::ensure_tags_loaded()
+    {
         if (!tags_loaded) {
             if (!tags_future.valid()) {
                 tags_future = std::async(std::launch::async, [this] {
                     return movie_parser::parsers::load_tags(tags_file, tags_progress);
-                });
+                    });
             }
             tags = tags_future.get();
             tags_loaded = true;
         }
-        return tags;
     }
-
-    const std::vector<movie_parser::models::MovieRating>& parser_service::get_ratings() {
+    void parser_service::ensure_ratings_loaded()
+    {
         if (!ratings_loaded) {
             if (!ratings_future.valid()) {
                 ratings_future = std::async(std::launch::async, [this] {
                     return movie_parser::parsers::load_ratings(ratings_file, ratings_progress);
-                });
+                    });
             }
             ratings = ratings_future.get();
             ratings_loaded = true;
         }
+    }
+
+    const std::vector<movie_parser::models::Movie>& parser_service::get_movies() {
+        ensure_movies_loaded();
+        return movies;
+    }
+
+    const std::vector<movie_parser::models::MovieTag>& parser_service::get_tags() {
+        ensure_tags_loaded();
+        return tags;
+    }
+
+    const std::vector<movie_parser::models::MovieRating>& parser_service::get_ratings() {
+        ensure_ratings_loaded();
         return ratings;
     }
 
+    void parser_service::ensure_movies_index_built() {
+        ensure_movies_loaded();
+        if (!movie_index_built) {
+            for (auto& m : movies) {
+                movie_by_id[m.movie_id] = &m;
+            }
+            movie_index_built = true;
+        }
+    }
+
+    void parser_service::ensure_ratings_index_built() {
+        ensure_ratings_loaded();
+        if (!ratings_index_built) {
+            for (auto& r : ratings) {
+                ratings_by_movie[r.movie_id].push_back(r);
+                ratings_by_user[r.user_id].push_back(r);
+            }
+            ratings_index_built = true;
+        }
+    }
+
+    void parser_service::ensure_tags_index_built() {
+        ensure_tags_loaded();
+        if (!tags_index_built) {
+            for (auto& t : tags) {
+                tags_by_movie[t.movie_id].push_back(t);
+            }
+            tags_index_built = true;
+        }
+    }
 
 }
 

@@ -22,6 +22,12 @@ namespace movie_parser::services {
 		    const std::vector<models::MovieTag>& get_tags();
 		    const std::vector<models::MovieRating>& get_ratings();
 
+			const models::Movie* get_movie_by_id(int movie_id) const;
+			const std::vector<models::MovieRating>& get_ratings_by_movie(int movie_id) const;
+			const std::vector<models::MovieRating>& get_ratings_by_user(int user_id) const;
+			const std::vector<models::MovieTag>& get_tags_by_movie(int movie_id) const;
+
+
 		private:
 			std::string movies_file;
 			std::string tags_file;
@@ -35,17 +41,33 @@ namespace movie_parser::services {
 			std::atomic<int> tags_progress{ 0 };
 			std::atomic<int> ratings_progress{ 0 };
 
+			std::unordered_map<int, models::Movie*> movie_by_id;
+			std::unordered_map<int, std::vector<models::MovieRating>> ratings_by_movie;
+			std::unordered_map<int, std::vector<models::MovieRating>> ratings_by_user;
+			std::unordered_map<int, std::vector<models::MovieTag>> tags_by_movie;
+
 			bool movies_loaded = false;
 			bool tags_loaded = false;
 			bool ratings_loaded = false;
+
+			bool movie_index_built = false;
+			bool ratings_index_built = false;
+			bool tags_index_built = false;
 
 		    std::vector<models::Movie> movies;
 		    std::vector<models::MovieTag> tags;
 		    std::vector<models::MovieRating> ratings;
 
-			// Reporter control
 			std::atomic<bool> stop_reporting{ false };
 			std::thread reporter;
+
+			void ensure_movies_loaded();
+			void ensure_tags_loaded();
+			void ensure_ratings_loaded();
+
+			void ensure_movies_index_built();
+			void ensure_tags_index_built();
+			void ensure_ratings_index_built();
 
 	};
 } 
