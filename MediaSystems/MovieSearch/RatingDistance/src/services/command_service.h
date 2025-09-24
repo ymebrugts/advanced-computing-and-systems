@@ -6,6 +6,7 @@
  */
 
 
+#include <optional>
 #include <string>
 #include <vector>
 #include <ostream>
@@ -14,5 +15,6 @@
 
 namespace rating_distance::services {
     // parse a raw input line that starts with "moviesearch".
-    models::Query parse_rating_distance_line(const std::vector<std::string>& arguments);
+    std::optional<models::Query> parse_rating_distance_line(const std::vector<std::string>& arguments);
+
 }

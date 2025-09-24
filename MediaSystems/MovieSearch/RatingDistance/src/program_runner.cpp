@@ -74,15 +74,18 @@ void run_program(std::istream& in, std::ostream& out, bool interactive_mode) {
         {
             auto tokens = shared::utils::tokenize_command_line(input_line);
             auto ratingDistanceQuery = rating_distance::services::parse_rating_distance_line(tokens);
-
+            if (!ratingDistanceQuery) {
+                out << "Error: expected exactly one command and two valid user IDs for RatingDistance command.\n";
+                continue;
+            }
             auto ratings = parserService.get_ratings();
 
-            const auto* userOneRatings = parserService.get_ratings_by_user_id(ratingDistanceQuery.user_id_one);
-            const auto* userTwoRatings = parserService.get_ratings_by_user_id(ratingDistanceQuery.user_id_two);
+            const auto* userOneRatings = parserService.get_ratings_by_user_id(ratingDistanceQuery.value().user_id_one);
+            const auto* userTwoRatings = parserService.get_ratings_by_user_id(ratingDistanceQuery.value().user_id_two);
 
             if (!userOneRatings || !userTwoRatings) {
                 out << "One or both users have no ratings.\n";
-                return;
+                continue;
             }
 
             std::unordered_map<int, double> userTwoMap;

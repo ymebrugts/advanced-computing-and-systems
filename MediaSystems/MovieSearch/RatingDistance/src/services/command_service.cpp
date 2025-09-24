@@ -7,6 +7,7 @@
 
 #include "command_service.h"
 
+#include <optional>
 #include <stdexcept>
 #include <string>
 #include <vector>
@@ -16,12 +17,12 @@
 
 namespace rating_distance::services
 {
-	rating_distance::models::Query parse_rating_distance_line(const std::vector<std::string>& arguments)
+	std::optional<models::Query> parse_rating_distance_line(const std::vector<std::string>& arguments)
 	{
 		rating_distance::models::Query query;
 		if (arguments.size() != 3)
 		{
-			throw std::invalid_argument("Expected exactly one command and two user IDs for RatingDistance command.");
+			return std::nullopt;
 		}
 		try
 		{
@@ -30,7 +31,7 @@ namespace rating_distance::services
 		}
 		catch (const std::exception&)
 		{
-			throw std::invalid_argument("User IDs must be valid integers.");
+			return std::nullopt;
 		}
 		return query;
 	}
