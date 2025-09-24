@@ -12,12 +12,15 @@
 
 namespace movie_parser::utils
 {
-    void print_progress_top_right(int movies, int tags, int ratings) {
+    void print_progress_top_right(int movies, int tags, int ratings, int movies_index, int tags_index, int ratings_index) {
         // Build progress string
         std::ostringstream oss;
         oss << "Movies: " << std::setw(3) << movies << "%"
             << " Tags: " << std::setw(3) << tags << "%"
-            << " Ratings: " << std::setw(3) << ratings << "%";
+            << " Ratings: " << std::setw(3) << ratings << "%"
+            << " | M-Idx: " << std::setw(3) << movies_index << "%"
+            << " T-Idx: " << std::setw(3) << tags_index << "%"
+            << " R-Idx: " << std::setw(3) << ratings_index << "%";
         std::string text = oss.str();
 
         static size_t last_len = 0;
@@ -57,8 +60,6 @@ namespace movie_parser::utils
 
         // Restore cursor
         std::cout << "\033[u" << std::flush;
-
-
     }
 }
 

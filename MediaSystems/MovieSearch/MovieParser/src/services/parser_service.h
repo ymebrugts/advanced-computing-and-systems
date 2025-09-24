@@ -41,6 +41,10 @@ namespace movie_parser::services {
 			std::atomic<int> tags_progress{ 0 };
 			std::atomic<int> ratings_progress{ 0 };
 
+			std::atomic<int> movies_index_progress{ 0 };
+			std::atomic<int> tags_index_progress{ 0 };
+			std::atomic<int> ratings_index_progress{ 0 };
+
 			std::unordered_map<int, models::Movie*> movie_by_id;
 			std::unordered_map<int, std::vector<models::MovieRating>> ratings_by_movie;
 			std::unordered_map<int, std::vector<models::MovieRating>> ratings_by_user;

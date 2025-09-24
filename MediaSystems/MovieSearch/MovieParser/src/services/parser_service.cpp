@@ -56,14 +56,20 @@ namespace movie_parser::services {
                 int movies = 0;
                 int tags = 0;
                 int ratings = 0;
+                int movies_index = 0;
+                int tags_index = 0;
+                int ratings_index = 0;
                 while (!stop_reporting) {
                     movies = movies_progress.load();
                     tags = tags_progress.load();
                     ratings = ratings_progress.load();
+                    movies_index = movies_index_progress.load();
+                    tags_index = tags_index_progress.load();
+                    ratings_index = ratings_index_progress.load();
 
-                    utils::print_progress_top_right(movies, tags, ratings);
+                    utils::print_progress_top_right(movies, tags, ratings, movies_index, tags_index, ratings_index);
 
-                    if (movies == 100 && tags == 100 && ratings == 100) break;
+                    if (movies == 100 && tags == 100 && ratings == 100 && movies_index == 100 && tags_index == 100 && ratings_index == 100) break;
                     std::this_thread::sleep_for(std::chrono::milliseconds(500));
                 }
                 // Show cursor since preloading is finished
@@ -145,9 +151,17 @@ namespace movie_parser::services {
 
         std::lock_guard<std::mutex> lock(movies_mutex);
         if (!movie_index_built) {
-            for (auto& m : movies) {
-                movie_by_id[m.movie_id] = &m;
+            size_t total = movies.size();
+            size_t count = 0;
+
+            for (auto& movie : movies) {
+                movie_by_id[movie.movie_id] = &movie;
+
+                if (++count % 1000 == 0) {
+                    movies_index_progress.store(static_cast<int>((count * 100) / total));
+                }
             }
+            movies_index_progress.store(100);
             movie_index_built = true;
         }
     }
@@ -157,10 +171,17 @@ namespace movie_parser::services {
 
         std::lock_guard<std::mutex> lock(tags_mutex);
         if (!tags_index_built) {
-            for (auto& t : tags) {
-                tags_by_movie[t.movie_id].push_back(t);
+            size_t total = tags.size();
+            size_t count = 0;
+
+            for (auto& tag : tags) {
+                tags_by_movie[tag.movie_id].push_back(tag);
+                if (++count % 1000 == 0) {
+                    tags_index_progress.store(static_cast<int>((count * 100) / total));
+                }
             }
-            tags_index_built = true;
+			tags_index_progress.store(100);
+			tags_index_built = true;
         }
     }
 
@@ -169,10 +190,18 @@ namespace movie_parser::services {
 
         std::lock_guard<std::mutex> lock(ratings_mutex);
         if (!ratings_index_built) {
-            for (auto& r : ratings) {
-                ratings_by_movie[r.movie_id].push_back(r);
-                ratings_by_user[r.user_id].push_back(r);
+            size_t total = ratings.size();
+            size_t count = 0;
+
+            for (auto& rating : ratings) {
+                ratings_by_movie[rating.movie_id].push_back(rating);
+                ratings_by_user[rating.user_id].push_back(rating);
+
+                if (++count % 1000 == 0) {
+                    ratings_index_progress.store(static_cast<int>((count * 100) / total));
+                }
             }
+            ratings_index_progress.store(100);
             ratings_index_built = true;
         }
     }
