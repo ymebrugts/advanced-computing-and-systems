@@ -26,6 +26,8 @@
 #include "parser_service.h"
 #include <numeric>
 
+#include "../../MovieParser/src/algorithms/rating_distance.h"
+
 const std::string HELP_MESSAGE =
 			"\nAvailable commands:\n"
 			"  parse                      Load and parse datasets (movies.dat, tags.dat, ratings.dat)\n"
@@ -87,27 +89,9 @@ void run_program(std::istream& in, std::ostream& out, bool interactive_mode) {
                 continue;
             }
 
-            std::unordered_map<int, double> userTwoMap;
-            userTwoMap.reserve(userTwoRatings->size());
-            for (const auto& rating : *userTwoRatings) {
-                userTwoMap[rating.movie_id] = rating.rating;
-            }
-
-            std::vector<double> distances;
-            distances.reserve(std::min(userOneRatings->size(), userTwoRatings->size()));
-            for (const auto& ratingOne : *userOneRatings) {
-                auto it = userTwoMap.find(ratingOne.movie_id);
-                if (it != userTwoMap.end()) {
-                    double distance = std::abs(ratingOne.rating - it->second);
-                    distances.push_back(distance);
-                }
-            }
-
-
-            if (!distances.empty()) {
-                double sum = std::accumulate(distances.begin(), distances.end(), 0.0);
-                double avg = sum / distances.size();
-                out << "The average rating distance is: " << avg << "\n";
+            auto distance = movie_parser::algorithms::compute_rating_distance(*userOneRatings, *userTwoRatings);
+            if (distance) {
+                out << "The RatingDistance is " << *distance << "\n";
             }
             else {
                 out << "There are no common movies which are rated by both users.\n";

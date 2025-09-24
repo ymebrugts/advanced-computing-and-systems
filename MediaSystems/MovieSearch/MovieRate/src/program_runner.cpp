@@ -68,7 +68,13 @@ void run_program(std::istream& in, std::ostream& out, bool interactive_mode) {
         }
         else if (cmd == "MovieRate")
         {
-        
+            auto tokens = shared::utils::tokenize_command_line(input_line);
+
+            auto movieRateQuery = movie_rate::services::parse_rating_distance_line(tokens);
+            if (!movieRateQuery) {
+                out << "Error: expected exactly one command, user id and movie id.\n";
+                continue;
+            }
         }
         else if (cmd == "alltofile")
         {
