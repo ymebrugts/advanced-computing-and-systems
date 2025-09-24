@@ -77,28 +77,30 @@ void run_program(std::istream& in, std::ostream& out, bool interactive_mode) {
 
             auto ratings = parserService.get_ratings();
 
-            std::unordered_map<int, movie_parser::models::MovieRating> userOneMap;
-            for (const auto& rating : shared::utils::find_all_by_member(ratings, ratingDistanceQuery.user_id_one, &movie_parser::models::MovieRating::user_id)) {
-                userOneMap[rating.movie_id] = rating;
+            const auto* userOneRatings = parserService.get_ratings_by_user_id(ratingDistanceQuery.user_id_one);
+            const auto* userTwoRatings = parserService.get_ratings_by_user_id(ratingDistanceQuery.user_id_two);
+
+            if (!userOneRatings || !userTwoRatings) {
+                out << "One or both users have no ratings.\n";
+                return;
             }
 
-            std::unordered_map<int, movie_parser::models::MovieRating> userTwoMap;
-            for (const auto& rating : shared::utils::find_all_by_member(ratings, ratingDistanceQuery.user_id_two, &movie_parser::models::MovieRating::user_id)) {
-                userTwoMap[rating.movie_id] = rating;
+            std::unordered_map<int, double> userTwoMap;
+            userTwoMap.reserve(userTwoRatings->size());
+            for (const auto& rating : *userTwoRatings) {
+                userTwoMap[rating.movie_id] = rating.rating;
             }
 
             std::vector<double> distances;
-            for (const auto& [id, ratingOne] : userOneMap) {
-                auto movieRating = userTwoMap.find(id);
-                if (movieRating != userTwoMap.end()) {
-                    const auto& ratingTwo = movieRating->second;
-
-                    // your distance calculation, e.g. absolute difference:
-                    double distance = std::abs(ratingOne.rating - ratingTwo.rating);
-
+            distances.reserve(std::min(userOneRatings->size(), userTwoRatings->size()));
+            for (const auto& ratingOne : *userOneRatings) {
+                auto it = userTwoMap.find(ratingOne.movie_id);
+                if (it != userTwoMap.end()) {
+                    double distance = std::abs(ratingOne.rating - it->second);
                     distances.push_back(distance);
                 }
             }
+
 
             if (!distances.empty()) {
                 double sum = std::accumulate(distances.begin(), distances.end(), 0.0);

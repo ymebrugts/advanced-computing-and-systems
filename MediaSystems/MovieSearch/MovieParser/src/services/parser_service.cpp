@@ -71,10 +71,24 @@ namespace movie_parser::services {
 
             });
         }
+
+        std::thread([this] {
+            // block here, but in background thread
+            ensure_movies_loaded();
+            ensure_tags_loaded();
+            ensure_ratings_loaded();
+
+            // build indices
+            ensure_movie_index_built();
+            ensure_tags_index_built();
+            ensure_ratings_index_built();
+        }).detach();
+        
     }
 
-    void parser_service::ensure_movies_loaded()
-    {
+    void parser_service::ensure_movies_loaded() {
+        std::lock_guard<std::mutex> lock(movies_mutex);
+
         if (!movies_loaded) {
             if (!movies_future.valid()) {
                 movies_future = std::async(std::launch::async, [this] {
@@ -86,8 +100,8 @@ namespace movie_parser::services {
         }
     }
 
-    void parser_service::ensure_tags_loaded()
-    {
+    void parser_service::ensure_tags_loaded() {
+        std::lock_guard<std::mutex> lock(tags_mutex);
         if (!tags_loaded) {
             if (!tags_future.valid()) {
                 tags_future = std::async(std::launch::async, [this] {
@@ -98,8 +112,8 @@ namespace movie_parser::services {
             tags_loaded = true;
         }
     }
-    void parser_service::ensure_ratings_loaded()
-    {
+    void parser_service::ensure_ratings_loaded() {
+        std::lock_guard<std::mutex> lock(ratings_mutex);
         if (!ratings_loaded) {
             if (!ratings_future.valid()) {
                 ratings_future = std::async(std::launch::async, [this] {
@@ -126,8 +140,10 @@ namespace movie_parser::services {
         return ratings;
     }
 
-    void parser_service::ensure_movies_index_built() {
+    void parser_service::ensure_movie_index_built() {
         ensure_movies_loaded();
+
+        std::lock_guard<std::mutex> lock(movies_mutex);
         if (!movie_index_built) {
             for (auto& m : movies) {
                 movie_by_id[m.movie_id] = &m;
@@ -136,8 +152,22 @@ namespace movie_parser::services {
         }
     }
 
+    void parser_service::ensure_tags_index_built() {
+        ensure_tags_loaded();
+
+        std::lock_guard<std::mutex> lock(tags_mutex);
+        if (!tags_index_built) {
+            for (auto& t : tags) {
+                tags_by_movie[t.movie_id].push_back(t);
+            }
+            tags_index_built = true;
+        }
+    }
+
     void parser_service::ensure_ratings_index_built() {
         ensure_ratings_loaded();
+
+        std::lock_guard<std::mutex> lock(ratings_mutex);
         if (!ratings_index_built) {
             for (auto& r : ratings) {
                 ratings_by_movie[r.movie_id].push_back(r);
@@ -147,14 +177,30 @@ namespace movie_parser::services {
         }
     }
 
-    void parser_service::ensure_tags_index_built() {
-        ensure_tags_loaded();
-        if (!tags_index_built) {
-            for (auto& t : tags) {
-                tags_by_movie[t.movie_id].push_back(t);
-            }
-            tags_index_built = true;
-        }
+
+
+    const models::Movie* parser_service::get_movie_by_movie_id(int movie_id) const {
+        const_cast<parser_service*>(this)->ensure_movie_index_built();
+        auto it = movie_by_id.find(movie_id);
+        return (it != movie_by_id.end()) ? it->second : nullptr;
+    }
+
+    const std::vector<models::MovieRating>* parser_service::get_ratings_by_movie_id(int movie_id) const {
+        const_cast<parser_service*>(this)->ensure_ratings_index_built();
+        auto it = ratings_by_movie.find(movie_id);
+        return (it != ratings_by_movie.end()) ? &it->second : nullptr;
+    }
+
+    const std::vector<models::MovieRating>* parser_service::get_ratings_by_user_id(int user_id) const {
+        const_cast<parser_service*>(this)->ensure_ratings_index_built();
+        auto it = ratings_by_user.find(user_id);
+        return (it != ratings_by_user.end()) ? &it->second : nullptr;
+    }
+
+    const std::vector<models::MovieTag>* parser_service::get_tags_by_movie_id(int movie_id) const {
+        const_cast<parser_service*>(this)->ensure_tags_index_built();
+        auto it = tags_by_movie.find(movie_id);
+        return (it != tags_by_movie.end()) ? &it->second : nullptr;
     }
 
 }

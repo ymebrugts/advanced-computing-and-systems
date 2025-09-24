@@ -22,10 +22,10 @@ namespace movie_parser::services {
 		    const std::vector<models::MovieTag>& get_tags();
 		    const std::vector<models::MovieRating>& get_ratings();
 
-			const models::Movie* get_movie_by_id(int movie_id) const;
-			const std::vector<models::MovieRating>& get_ratings_by_movie(int movie_id) const;
-			const std::vector<models::MovieRating>& get_ratings_by_user(int user_id) const;
-			const std::vector<models::MovieTag>& get_tags_by_movie(int movie_id) const;
+			const models::Movie* get_movie_by_movie_id(int movie_id) const;
+			const std::vector<models::MovieRating>* get_ratings_by_movie_id(int movie_id) const;
+			const std::vector<models::MovieRating>* get_ratings_by_user_id(int user_id) const;
+			const std::vector<models::MovieTag>* get_tags_by_movie_id(int movie_id) const;
 
 
 		private:
@@ -65,9 +65,13 @@ namespace movie_parser::services {
 			void ensure_tags_loaded();
 			void ensure_ratings_loaded();
 
-			void ensure_movies_index_built();
+			void ensure_movie_index_built();
 			void ensure_tags_index_built();
 			void ensure_ratings_index_built();
+
+			mutable std::mutex movies_mutex;
+			mutable std::mutex tags_mutex;
+			mutable std::mutex ratings_mutex;
 
 	};
 } 
