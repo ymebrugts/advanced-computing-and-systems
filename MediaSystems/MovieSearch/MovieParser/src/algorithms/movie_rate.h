@@ -16,9 +16,11 @@
 
 namespace movie_parser::algorithms {
 
-    std::optional<models::MovieRateResult> predict_movie_rate(
-        int target_user_id,
-        int target_movie_id,
-        const std::unordered_map<int, std::vector<movie_parser::models::MovieRating>>& ratings_by_user);
+	models::MovieRateResult predict_movie_rate(
+        int targetUserId,
+        int targetMovieId,
+        const std::unordered_map<int, std::vector<movie_parser::models::MovieRating>>& ratingsByUser,
+        const std::unordered_map<int, std::unordered_map<int, double>>& ratings_by_user_and_movie);
+
 
 }

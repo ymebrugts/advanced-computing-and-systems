@@ -17,16 +17,17 @@ namespace movie_parser::algorithms
 {
     std::optional<double> compute_rating_distance(
         const std::vector<models::MovieRating>& user_one_ratings,
-        const std::vector<models::MovieRating>& user_two_ratings)
+        int user_two_id,
+        const std::unordered_map<int, std::unordered_map<int, double>>& ratings_by_user_and_movie)
     {
-        std::unordered_map<int, double> userTwoMap;
-        userTwoMap.reserve(user_two_ratings.size());
-        for (const auto& rating : user_two_ratings) {
-            userTwoMap[rating.movie_id] = rating.rating;
+        auto userTwoNestedMapRatingByUserMovie = ratings_by_user_and_movie.find(user_two_id);
+        if (userTwoNestedMapRatingByUserMovie == ratings_by_user_and_movie.end()) {
+            return std::nullopt;
         }
+		const auto& userTwoMap = userTwoNestedMapRatingByUserMovie->second; // movie_id -> rating
 
         std::vector<double> distances;
-        distances.reserve(std::min(user_one_ratings.size(), user_two_ratings.size()));
+        distances.reserve(std::min(user_one_ratings.size(), userTwoMap.size()));
         for (const auto& ratingOne : user_one_ratings) {
             auto it = userTwoMap.find(ratingOne.movie_id);
             if (it != userTwoMap.end()) {

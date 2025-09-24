@@ -80,24 +80,23 @@ void run_program(std::istream& in, std::ostream& out, bool interactive_mode) {
                 continue;
             }
 
-
             auto result = movie_parser::algorithms::predict_movie_rate(
-                movieRateQuery->user_id,
-                movieRateQuery->movie_id,
-                parserService.get_all_user_ratings_index()   // expose ratings_all_users from parser_service
+                movieRateQuery.value().user_id,
+                movieRateQuery.value().movie_id,
+                parserService.get_all_user_ratings_index(),
+                parserService.get_all_user_movie_ratings_index()
             );
 
-            if (!result) {
-                out << "Most similar user (" << mostSimilarUserId
-                    << ") has not rated movie " << targetMovieId
-                    << ". Cannot predict.\n";
-                continue;
+            if (!result.success) {
+                out << result.error_message << "\n";
             }
-            out << "The predicted rating for UserID: " << result->targetUserId
-                << " and MovieID: " << result->targetMovieId
-                << " is " << result->predictedRating
-                << " based on the most similar user: " << result->similarUserId
-                << " with a ratingdistance: " << result->distance << "\n";
+            else {
+                out << "The predicted rating for UserID: " << result.target_user_id
+                    << " and MovieID: " << result.target_movie_id
+                    << " is " << result.predicted_rating
+                    << " based on the most similar user: " << result.similar_user_id
+                    << " with a ratingdistance: " << result.distance << "\n";
+            }
 
         }
         else if (cmd == "alltofile")

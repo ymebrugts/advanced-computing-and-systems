@@ -28,7 +28,7 @@ namespace movie_parser::services {
 			const std::vector<models::MovieTag>* get_tags_by_movie_id(int movie_id) const;
 
 			const std::unordered_map<int, std::vector<models::MovieRating>>& get_all_user_ratings_index() const;
-
+			const std::unordered_map<int, std::unordered_map<int, double>>& get_all_user_movie_ratings_index() const;
 
 		private:
 			std::string movies_file;
@@ -51,6 +51,8 @@ namespace movie_parser::services {
 			std::unordered_map<int, std::vector<models::MovieRating>> ratings_by_movie;
 			std::unordered_map<int, std::vector<models::MovieRating>> ratings_all_users;
 			std::unordered_map<int, std::vector<models::MovieTag>> tags_by_movie;
+			std::unordered_map<int, std::unordered_map<int, double>> ratings_by_user_and_movie;
+
 
 			bool movies_loaded = false;
 			bool tags_loaded = false;

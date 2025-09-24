@@ -89,7 +89,12 @@ void run_program(std::istream& in, std::ostream& out, bool interactive_mode) {
                 continue;
             }
 
-            auto distance = movie_parser::algorithms::compute_rating_distance(*userOneRatings, *userTwoRatings);
+            auto distance = movie_parser::algorithms::compute_rating_distance(
+                *userOneRatings,
+                ratingDistanceQuery.value().user_id_two,             
+                parserService.get_all_user_movie_ratings_index()
+            );
+
             if (distance) {
                 out << "The RatingDistance is " << *distance << "\n";
             }

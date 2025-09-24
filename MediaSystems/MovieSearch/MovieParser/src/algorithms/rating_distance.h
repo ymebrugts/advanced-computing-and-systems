@@ -6,6 +6,7 @@
  */
 
 #include <optional>
+#include <unordered_map>
 #include <vector>
 #include "../models/MovieRating.h"
 
@@ -15,5 +16,6 @@ namespace movie_parser::algorithms {
 	// Returns std::nullopt if no common movies are rated.
     std::optional<double> compute_rating_distance(
         const std::vector<models::MovieRating>& user_one_ratings,
-        const std::vector<models::MovieRating>& use_two_ratings);
+        int user_two_id,
+        const std::unordered_map<int, std::unordered_map<int, double>>& ratings_by_user_and_movie);
 }
