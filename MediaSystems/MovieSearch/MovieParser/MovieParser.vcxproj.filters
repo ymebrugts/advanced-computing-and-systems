@@ -48,6 +48,12 @@
     <ClInclude Include="src\algorithms\rating_distance.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\algorithms\movie_rate.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\models\MovieRateResult.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\parsers\movie_parser.cpp">
@@ -66,6 +72,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\algorithms\rating_distance.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\algorithms\movie_rate.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

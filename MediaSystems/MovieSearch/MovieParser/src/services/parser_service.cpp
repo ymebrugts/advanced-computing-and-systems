@@ -195,7 +195,7 @@ namespace movie_parser::services {
 
             for (auto& rating : ratings) {
                 ratings_by_movie[rating.movie_id].push_back(rating);
-                ratings_by_user[rating.user_id].push_back(rating);
+                ratings_all_users[rating.user_id].push_back(rating);
 
                 if (++count % 1000 == 0) {
                     ratings_index_progress.store(static_cast<int>((count * 100) / total));
@@ -222,14 +222,19 @@ namespace movie_parser::services {
 
     const std::vector<models::MovieRating>* parser_service::get_ratings_by_user_id(int user_id) const {
         const_cast<parser_service*>(this)->ensure_ratings_index_built();
-        auto it = ratings_by_user.find(user_id);
-        return (it != ratings_by_user.end()) ? &it->second : nullptr;
+        auto it = ratings_all_users.find(user_id);
+        return (it != ratings_all_users.end()) ? &it->second : nullptr;
     }
 
     const std::vector<models::MovieTag>* parser_service::get_tags_by_movie_id(int movie_id) const {
         const_cast<parser_service*>(this)->ensure_tags_index_built();
         auto it = tags_by_movie.find(movie_id);
         return (it != tags_by_movie.end()) ? &it->second : nullptr;
+    }
+
+    const std::unordered_map<int, std::vector<models::MovieRating>>& parser_service::get_all_user_ratings_index() const {
+        const_cast<parser_service*>(this)->ensure_ratings_index_built();
+        return ratings_all_users;
     }
 
 }

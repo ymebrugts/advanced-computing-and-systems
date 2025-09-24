@@ -25,6 +25,10 @@
 #include "rating_parser.h"
 #include "parser_service.h"
 #include <numeric>
+#include <unordered_set>
+#include <rating_distance.h>
+
+#include "movie_rate.h"
 
 const std::string HELP_MESSAGE =
 "\nAvailable commands:\n"
@@ -75,6 +79,26 @@ void run_program(std::istream& in, std::ostream& out, bool interactive_mode) {
                 out << "Error: expected exactly one command, user id and movie id.\n";
                 continue;
             }
+
+
+            auto result = movie_parser::algorithms::predict_movie_rate(
+                movieRateQuery->user_id,
+                movieRateQuery->movie_id,
+                parserService.get_all_user_ratings_index()   // expose ratings_all_users from parser_service
+            );
+
+            if (!result) {
+                out << "Most similar user (" << mostSimilarUserId
+                    << ") has not rated movie " << targetMovieId
+                    << ". Cannot predict.\n";
+                continue;
+            }
+            out << "The predicted rating for UserID: " << result->targetUserId
+                << " and MovieID: " << result->targetMovieId
+                << " is " << result->predictedRating
+                << " based on the most similar user: " << result->similarUserId
+                << " with a ratingdistance: " << result->distance << "\n";
+
         }
         else if (cmd == "alltofile")
         {
