@@ -29,12 +29,16 @@ namespace movie_parser::algorithms {
         const auto& targetUserRatings = it->second;
 
         // Check if user already rated the movie
-        for (const auto& r : targetUserRatings) {
-            if (r.movie_id == target_movie_id) {
-                result.success = true;
+        auto mapIt = ratings_by_user_and_movie.find(target_user_id); // user_id to movie_id
+        if (mapIt != ratings_by_user_and_movie.end()) {
+            const auto& movieRatingsMap = mapIt->second; // movie_id to rating
+            auto ratingIt = movieRatingsMap.find(target_movie_id);
+            if (ratingIt != movieRatingsMap.end()) {
+                result.success = false;
                 result.similar_user_id = target_user_id;
-                result.predicted_rating = r.rating;
+                result.predicted_rating = ratingIt->second;
                 result.distance = 0.0;
+                result.error_message = "User already rated this movie.";
                 return result;
             }
         }
@@ -62,21 +66,21 @@ namespace movie_parser::algorithms {
         }
 
         // Predict rating = rating of most similar user for target movie
-        const auto& similarUserRatings = ratings_by_user.at(mostSimilarUserId);
-        for (const auto& r : similarUserRatings) {
-            if (r.movie_id == target_movie_id) {
+        auto mostSimilarUserIt = ratings_by_user_and_movie.find(mostSimilarUserId);
+        if (mostSimilarUserIt != ratings_by_user_and_movie.end()) {
+            const auto& similarUserMovieMap = mostSimilarUserIt->second;
+            auto ratingIt = similarUserMovieMap.find(target_movie_id);
+            if (ratingIt != similarUserMovieMap.end()) {
                 result.success = true;
                 result.similar_user_id = mostSimilarUserId;
-                result.predicted_rating = r.rating;
+                result.predicted_rating = ratingIt->second;
                 result.distance = bestDistance;
                 return result;
             }
         }
 
         // If similar user hasn't rated target movie
-        result.error_message = "Most similar user (" + std::to_string(mostSimilarUserId) +
-            ") has not rated movie " + std::to_string(target_movie_id) +
-            ". Cannot predict.";
+        result.error_message = "Most similar user (" + std::to_string(mostSimilarUserId) + ") has not rated movie " + std::to_string(target_movie_id) + "so cannot be predicted.";
         return result;
     }
 
