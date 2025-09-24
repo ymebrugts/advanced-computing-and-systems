@@ -27,7 +27,7 @@
 #include <numeric>
 
 const std::string HELP_MESSAGE =
-			"Available commands:\n"
+			"\nAvailable commands:\n"
 			"  parse                      Load and parse datasets (movies.dat, tags.dat, ratings.dat)\n"
 			"  RatingDistance [options]   Perform a rating distance query\n"
 			"  alltofile                  Write all movies, tags, and ratings to text files\n"
@@ -78,7 +78,6 @@ void run_program(std::istream& in, std::ostream& out, bool interactive_mode) {
                 out << "Error: expected exactly one command and two valid user IDs for RatingDistance command.\n";
                 continue;
             }
-            auto ratings = parserService.get_ratings();
 
             const auto* userOneRatings = parserService.get_ratings_by_user_id(ratingDistanceQuery.value().user_id_one);
             const auto* userTwoRatings = parserService.get_ratings_by_user_id(ratingDistanceQuery.value().user_id_two);
