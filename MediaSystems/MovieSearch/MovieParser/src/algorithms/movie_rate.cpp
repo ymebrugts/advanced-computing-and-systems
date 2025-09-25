@@ -4,7 +4,6 @@
  * @date 2025-09-24
  */
 
- // movie_parser/algorithms/movie_rate.cpp
 #include "movie_rate.h"
 #include "rating_distance.h"
 #include <limits>
@@ -98,7 +97,7 @@ namespace movie_parser::algorithms {
         }
         double targetMean = mean_of(tIt->second);
 
-        // Iterate over ALL users; keep only those who rated the target movie
+        // Iterate over all users; keep only those who rated the target movie
         for (const auto& [otherUserId, movieMap] : ratings_by_user_and_movie) {
             if (otherUserId == target_user_id) continue;
 
