@@ -14,7 +14,7 @@
 #include <vector>
 
 #include "MovieRating.h"
-#include "Services/command_service.h"
+#include "services/command_service.h"
 
 #include "tags_parser.h"
 #include "movie_parser.h"

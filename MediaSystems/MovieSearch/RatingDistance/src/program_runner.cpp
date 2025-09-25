@@ -14,7 +14,7 @@
 #include <vector>
 
 #include "MovieRating.h"
-#include "Services/command_service.h"
+#include "services/command_service.h"
 
 #include "tags_parser.h"
 #include "movie_parser.h"
@@ -26,7 +26,7 @@
 #include "parser_service.h"
 #include <numeric>
 
-#include "../../MovieParser/src/algorithms/rating_distance.h"
+#include "rating_distance.h"
 
 const std::string HELP_MESSAGE =
 			"\nAvailable commands:\n"

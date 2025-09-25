@@ -28,7 +28,6 @@ namespace movie_rate::utils {
         size_t processed = 0;
 
         long long validPairs = 0;
-        long long totalPairs = 0;
 
         for (const auto& [movieId, ratings] : ratings_by_movie) {
             for (size_t i = 0; i < ratings.size(); i++) {
