@@ -95,12 +95,15 @@ void run_program(std::istream& in, std::ostream& out, bool interactive_mode) {
             if (!result.success) {
                 out << result.error_message << "\n";
             }
-            else if (result.similar_user_id == -1 && result.distance == -1) {
-                // Pearson fallback case
+            else if (result.used_pearson) {
                 out << "The predicted rating for UserID: " << result.target_user_id
                     << " and MovieID: " << result.target_movie_id
                     << " is " << result.predicted_rating
-                    << " (calculated using Pearson correlation fallback due to sparsity)\n";
+                    << " (calculated using Pearson correlation scarcity fallback.\n\n"
+					"1. This takes into account all the ratings and users that have seen that same movie and calculate a correlation score based on the movies they both saw"
+                    "2. Also calculate a weight based on the amount of movies that they have shared to give a weight to the correlation\n"
+					"3. Normalizes ratings by subtracting the user's mean. Meaning people can be inclined to rate higher or lower in general which should not effect correlation"
+                    "--> Combine the correlation, weight and normalized rating to calculate the predicted score)\n";
             }
             else if (result.similar_user_id == result.target_user_id) {
                 out << "User " << result.target_user_id

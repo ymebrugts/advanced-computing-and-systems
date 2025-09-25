@@ -10,14 +10,17 @@
 #include <limits>
 #include <unordered_set>
 
+#include "pearson.h"
+
 namespace movie_parser::algorithms {
-	models::MovieRateResult predict_movie_rate(
+
+    models::MovieRateResult predict_movie_rate(
         int target_user_id,
         int target_movie_id,
         const std::unordered_map<int, std::vector<movie_parser::models::MovieRating>>& ratings_by_user,
         const std::unordered_map<int, std::unordered_map<int, double>>& ratings_by_user_and_movie)
     {
-	    models::MovieRateResult result;
+        models::MovieRateResult result;
         result.target_user_id = target_user_id;
         result.target_movie_id = target_movie_id;
 
@@ -46,7 +49,7 @@ namespace movie_parser::algorithms {
         double bestDistance = std::numeric_limits<double>::max();
         int mostSimilarUserId = -1;
 
-        // Find most similar user
+        // Find most similar user (absolute distance)
         for (const auto& [otherUserId, otherRatings] : ratings_by_user) {
             if (otherUserId == target_user_id) continue;
 
@@ -61,7 +64,7 @@ namespace movie_parser::algorithms {
         }
 
         if (mostSimilarUserId == -1) {
-            result.error_message = "No similar user found to predict rating.";
+            result.error_message = "No similar user were found to predict rating.";
             return result;
         }
 
@@ -79,8 +82,42 @@ namespace movie_parser::algorithms {
             }
         }
 
-        // If similar user hasn't rated target movie
-        result.error_message = "Most similar user (" + std::to_string(mostSimilarUserId) + ") has not rated movie " + std::to_string(target_movie_id) + " so cannot be predicted.";
+        // Pearson correlation fallback
+        double weightedSum = 0.0;
+        double weightTotal = 0.0;
+
+        // Check all users who rated this movie
+        auto movieIt = ratings_by_user_and_movie.find(target_movie_id);
+        if (movieIt != ratings_by_user_and_movie.end()) {
+            for (const auto& [otherUserId, rating] : movieIt->second) {
+                if (otherUserId == target_user_id) continue;
+
+                auto pearsonRes = compute_pearson_similarity(
+                    target_user_id, otherUserId, ratings_by_user_and_movie);
+
+                if (pearsonRes.valid && pearsonRes.correlation > 0) {
+                    // Weight = correlation * overlap
+                    double weight = pearsonRes.correlation * pearsonRes.overlap;
+                    weightedSum += weight * rating;
+                    weightTotal += weight;
+                }
+            }
+        }
+
+        if (weightTotal > 0) {
+            result.success = true;
+            result.predicted_rating = weightedSum / weightTotal;
+            result.similar_user_id = -1;
+            result.distance = -1; 
+            result.used_pearson = true;  
+            result.error_message = "";
+            return result;
+        }
+
+        // If still nothing
+        result.error_message = "The most similar user (" + std::to_string(mostSimilarUserId) +
+            ") has not rated the movie " + std::to_string(target_movie_id) +
+            " and Pearson fallback does not have enough overlap.";
         return result;
     }
 

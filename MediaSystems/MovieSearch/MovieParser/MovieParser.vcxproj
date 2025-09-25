@@ -145,11 +145,13 @@
   <ItemGroup>
     <ClInclude Include="framework.h" />
     <ClInclude Include="src\algorithms\movie_rate.h" />
+    <ClInclude Include="src\algorithms\pearson.h" />
     <ClInclude Include="src\algorithms\rating_distance.h" />
     <ClInclude Include="src\models\Movie.h" />
     <ClInclude Include="src\models\MovieRateResult.h" />
     <ClInclude Include="src\models\MovieRating.h" />
     <ClInclude Include="src\models\MovieTag.h" />
+    <ClInclude Include="src\models\PearsonResult.h" />
     <ClInclude Include="src\parsers\mapped_file.hpp" />
     <ClInclude Include="src\parsers\movie_parser.h" />
     <ClInclude Include="src\parsers\rating_parser.h" />
@@ -164,6 +166,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\algorithms\movie_rate.cpp" />
+    <ClCompile Include="src\algorithms\pearson.cpp" />
     <ClCompile Include="src\algorithms\rating_distance.cpp" />
     <ClCompile Include="src\parsers\movie_parser.cpp" />
     <ClCompile Include="src\parsers\rating_parser.cpp" />

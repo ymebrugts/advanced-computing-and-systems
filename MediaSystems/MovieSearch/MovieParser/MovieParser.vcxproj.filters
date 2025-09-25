@@ -54,6 +54,12 @@
     <ClInclude Include="src\models\MovieRateResult.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\models\PearsonResult.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\algorithms\pearson.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\parsers\movie_parser.cpp">
@@ -75,6 +81,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\algorithms\movie_rate.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\algorithms\pearson.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

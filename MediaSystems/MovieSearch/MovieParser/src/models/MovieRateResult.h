@@ -16,6 +16,7 @@ namespace movie_parser::models {
         double predicted_rating{ -1 };
         double distance{ -1 };
         bool success{ false };
+        bool used_pearson{ false };
         std::string error_message;
     };
 }
