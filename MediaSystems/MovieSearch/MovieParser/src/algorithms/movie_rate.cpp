@@ -9,6 +9,7 @@
 #include "rating_distance.h"
 #include <limits>
 #include <unordered_set>
+#include <cmath>
 
 #include "pearson.h"
 
@@ -63,11 +64,6 @@ namespace movie_parser::algorithms {
             }
         }
 
-        if (mostSimilarUserId == -1) {
-            result.error_message = "No similar user were found to predict rating.";
-            return result;
-        }
-
         // Predict rating = rating of most similar user for target movie
         auto mostSimilarUserIt = ratings_by_user_and_movie.find(mostSimilarUserId);
         if (mostSimilarUserIt != ratings_by_user_and_movie.end()) {
@@ -87,30 +83,57 @@ namespace movie_parser::algorithms {
         double weightTotal = 0.0;
 
         // Check all users who rated this movie
-        auto movieIt = ratings_by_user_and_movie.find(target_movie_id);
-        if (movieIt != ratings_by_user_and_movie.end()) {
-            for (const auto& [otherUserId, rating] : movieIt->second) {
-                if (otherUserId == target_user_id) continue;
+        auto mean_of = [](const std::unordered_map<int, double>& m) {
+            if (m.empty()) return 0.0;
+            double s = 0.0;
+            for (const auto& kv : m) s += kv.second;
+            return s / static_cast<double>(m.size());
+        };
 
-                auto pearsonRes = compute_pearson_similarity(
-                    target_user_id, otherUserId, ratings_by_user_and_movie);
+        // target user's mean (add back after combining centered neighbor ratings)
+        auto tIt = ratings_by_user_and_movie.find(target_user_id);
+        if (tIt == ratings_by_user_and_movie.end() || tIt->second.empty()) {
+            result.error_message = "User " + std::to_string(target_user_id) + " has no ratings.";
+            return result;
+        }
+        double targetMean = mean_of(tIt->second);
 
-                if (pearsonRes.valid && pearsonRes.correlation > 0) {
-                    // Weight = correlation * overlap
-                    double weight = pearsonRes.correlation * pearsonRes.overlap;
-                    weightedSum += weight * rating;
-                    weightTotal += weight;
-                }
-            }
+        // Iterate over ALL users; keep only those who rated the target movie
+        for (const auto& [otherUserId, movieMap] : ratings_by_user_and_movie) {
+            if (otherUserId == target_user_id) continue;
+
+            auto itMovie = movieMap.find(target_movie_id);
+            if (itMovie == movieMap.end()) continue;  // this user didn't rate the target movie
+
+            const double neighborRatingForMovie = itMovie->second;
+
+            // Pearson(u, v) on co-rated items; min_overlap is enforced inside
+            auto pearsonRes = compute_pearson_similarity(
+                target_user_id, otherUserId, ratings_by_user_and_movie);
+
+            if (!pearsonRes.valid) continue;
+
+            //Only positive correlations.
+            //if (pearsonRes.correlation <= 0.0) continue;
+
+            // Scarcity weighting: correlation * overlap
+            const double weight = pearsonRes.correlation * static_cast<double>(pearsonRes.overlap);
+
+            // Neighbor mean of all their ratings (user-based CF)
+            const double neighborMean = mean_of(movieMap);
+
+            // Mean-centered contribution from this neighbor
+            weightedSum += weight * (neighborRatingForMovie - neighborMean);
+            weightTotal += std::abs(weight);
         }
 
-        if (weightTotal > 0) {
+        if (weightTotal > 0.0) {
             result.success = true;
-            result.predicted_rating = weightedSum / weightTotal;
+            result.used_pearson = true;
             result.similar_user_id = -1;
-            result.distance = -1; 
-            result.used_pearson = true;  
-            result.error_message = "";
+            result.distance = -1;
+            result.predicted_rating = targetMean + (weightedSum / weightTotal);
+            result.error_message.clear();
             return result;
         }
 

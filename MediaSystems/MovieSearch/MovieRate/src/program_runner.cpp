@@ -103,6 +103,7 @@ void run_program(std::istream& in, std::ostream& out, bool interactive_mode) {
 					"1. This takes into account all the ratings and users that have seen that same movie and calculate a correlation score based on the movies they both saw\n"
                     "2. Also calculate a weight based on the amount of movies that they have shared to give a weight to the correlation\n"
 					"3. Normalizes ratings by subtracting the user's mean. Meaning people can be inclined to rate higher or lower in general which should not affect correlation\n"
+					"4. Negative correlation is also taken into account on top of positive correlation\n"
                     "--> Combine the correlation, weight and normalized rating to calculate the predicted score)\n";
             }
             else if (result.similar_user_id == result.target_user_id) {
