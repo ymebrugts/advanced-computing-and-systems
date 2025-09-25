@@ -8,7 +8,11 @@
 #else
 #include <sys/ioctl.h>
 #include <unistd.h>
+#include <termios.h>
+#include <cstdio>
 #endif
+
+
 
 namespace movie_parser::utils
 {
