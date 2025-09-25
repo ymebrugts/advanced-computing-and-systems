@@ -90,22 +90,43 @@ void run_program(std::istream& in, std::ostream& out, bool interactive_mode) {
                 movieRateQuery.value().user_id,
                 movieRateQuery.value().movie_id,
                 parserService.get_all_user_ratings_index(),
-                parserService.get_all_user_movie_ratings_index()
+                parserService.get_all_user_movie_ratings_index(),
+                parserService.get_all_movies_index()
             );
 
             if (!result.success) {
                 out << result.error_message << "\n";
             }
-            else if (result.used_pearson) {
+            else if (result.used_hybrid) { // No time to create a message per type but this is trivial to add
                 out << "The predicted rating for UserID: " << result.target_user_id
                     << " and MovieID: " << result.target_movie_id
                     << " is " << result.predicted_rating << "\n"
-                    << "Calculated using Pearson correlation fallback due to scarcity.\n\n"
+                    << "Calculated using Pearson correlation combined with item-based CF on genre due to scarcity.\n\n"
 					"1. This takes into account all the ratings and users that have seen that same movie and calculate a correlation score\n"
                     "2. Also calculate a weight based on the amount of movies that they have shared to give a weight to the correlation + Bayesian shrinkage to not overwhelm the result by too much weight\n"
 					"3. Normalizes ratings by subtracting the user's mean. Meaning people can be inclined to rate higher or lower in general which should not affect correlation\n"
 					"4. Negative correlation is also taken into account on top of positive correlation\n"
+					"5. Use item based CF with weight 0.3 on final score comparing yourself with your genre preference\n"
+                    "--> Combine the correlation, weight, normalized rating and item-based CF on genre to calculate the predicted score)\n";
+            }
+            else if (result.used_pearson) { // No time to create a message per type but this is trivial to add
+                out << "The predicted rating for UserID: " << result.target_user_id
+                    << " and MovieID: " << result.target_movie_id
+                    << " is " << result.predicted_rating << "\n"
+                    << "Calculated using Pearson correlation due to scarcity.\n\n"
+                    "1. This takes into account all the ratings and users that have seen that same movie and calculate a correlation score\n"
+                    "2. Also calculate a weight based on the amount of movies that they have shared to give a weight to the correlation + Bayesian shrinkage to not overwhelm the result by too much weight\n"
+                    "3. Normalizes ratings by subtracting the user's mean. Meaning people can be inclined to rate higher or lower in general which should not affect correlation\n"
+                    "4. Negative correlation is also taken into account on top of positive correlation\n"
                     "--> Combine the correlation, weight and normalized rating to calculate the predicted score)\n";
+            }
+            else if (result.used_item_based) { // No time to create a message per type but this is trivial to add
+                out << "The predicted rating for UserID: " << result.target_user_id
+                    << " and MovieID: " << result.target_movie_id
+                    << " is " << result.predicted_rating << "\n"
+                    << "Calculated using item-based CF on genre due to scarcity.\n\n"
+                    "1. Use item based CF with weight 0.3 on final score comparing yourself with your genre preference\n"
+                    "--> Item-based CF on genre to calculate the predicted score)\n";
             }
             else if (result.similar_user_id == result.target_user_id) {
                 out << "User " << result.target_user_id

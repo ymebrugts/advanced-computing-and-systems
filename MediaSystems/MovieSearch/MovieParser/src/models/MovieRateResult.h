@@ -17,6 +17,8 @@ namespace movie_parser::models {
         double distance{ -1 };
         bool success{ false };
         bool used_pearson{ false };
+        bool used_hybrid{ false };
+        bool used_item_based{ false };
         std::string error_message;
     };
 }

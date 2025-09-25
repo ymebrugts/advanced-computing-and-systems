@@ -249,6 +249,12 @@ namespace movie_parser::services {
         return ratings_by_movie;
     }
 
+    const std::unordered_map<int, movie_parser::models::Movie*>& parser_service::get_all_movies_index() const {
+        const_cast<parser_service*>(this)->ensure_movie_index_built();
+        return movie_by_id;
+    }
+
+
 }
 
 

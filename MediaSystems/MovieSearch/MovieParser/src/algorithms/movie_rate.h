@@ -13,6 +13,7 @@
 
 #include "../models/MovieRating.h"
 #include "../models/MovieRateResult.h"
+#include "../models/Movie.h"
 
 namespace movie_parser::algorithms {
 
@@ -20,7 +21,6 @@ namespace movie_parser::algorithms {
         int targetUserId,
         int targetMovieId,
         const std::unordered_map<int, std::vector<movie_parser::models::MovieRating>>& ratingsByUser,
-        const std::unordered_map<int, std::unordered_map<int, double>>& ratings_by_user_and_movie);
-
-
+        const std::unordered_map<int, std::unordered_map<int, double>>& ratings_by_user_and_movie,
+		const std::unordered_map<int, movie_parser::models::Movie*>& movies_by_id);
 }
