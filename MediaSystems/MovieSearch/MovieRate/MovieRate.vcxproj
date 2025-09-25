@@ -128,11 +128,13 @@
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\program_runner.cpp" />
     <ClCompile Include="src\services\command_service.cpp" />
+    <ClCompile Include="src\utils\overlap.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\models\Query.h" />
     <ClInclude Include="src\program_runner.h" />
     <ClInclude Include="src\services\command_service.h" />
+    <ClInclude Include="src\utils\overlap.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MovieParser\MovieParser.vcxproj">

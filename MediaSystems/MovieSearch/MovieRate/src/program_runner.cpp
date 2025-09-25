@@ -29,6 +29,7 @@
 #include <rating_distance.h>
 
 #include "movie_rate.h"
+#include "utils/overlap.h"
 
 const std::string HELP_MESSAGE =
 "\nAvailable commands:\n"
@@ -69,6 +70,10 @@ void run_program(std::istream& in, std::ostream& out, bool interactive_mode) {
             auto tags = parserService.get_tags();
             auto movies = parserService.get_movies();
             auto ratings = parserService.get_ratings();
+        }
+        else if (cmd == "checkoverlap")
+        {
+	        movie_rate::utils::check_dataset_overlap_second(parserService.get_all_user_ratings_index());
         }
         else if (cmd == "MovieRate")
         {
