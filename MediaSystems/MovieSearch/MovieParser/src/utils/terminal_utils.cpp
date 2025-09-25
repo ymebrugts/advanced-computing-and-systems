@@ -12,6 +12,8 @@
 
 namespace movie_parser::utils
 {
+    static int progress_row = -1;
+
     void print_progress_top_right(int movies, int tags, int ratings, int movies_index, int tags_index, int ratings_index) {
         // Build progress string
         std::ostringstream oss;
@@ -49,11 +51,16 @@ namespace movie_parser::utils
         int col = (width - static_cast<int>(text.size()) + 1);
         if (col < 1) col = 1;
 
+        if (progress_row < 0) {
+            // fallback: put it at the top row
+            progress_row = 1;
+        }
+
         // Save cursor
         std::cout << "\033[s";
 
         // Move to row 1, correct col
-        std::cout << "\033[1;" << col << "H";
+        std::cout << "\033[" << progress_row << ";" << col << "H";
 
         // Print text
         std::cout << text;
@@ -62,7 +69,7 @@ namespace movie_parser::utils
         std::cout << "\033[u" << std::flush;
     }
 
-    static int progress_row = -1;
+
 
     void init_progress_row() {
 #ifdef _WIN32
