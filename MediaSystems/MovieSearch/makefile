@@ -4,6 +4,8 @@ CXXFLAGS := -std=c++20 -Wall -Wextra \
     -IMovieSearch/src \
     -IMovieParser/src/models \
     -IMovieParser/src/parsers \
+    -IMovieParser/src/services \
+    -IMovieParser/src/utils \
     -IShared/src \
     -IShared/src/utils
 

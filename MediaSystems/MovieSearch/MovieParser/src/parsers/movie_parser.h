@@ -9,6 +9,7 @@
 
 #include <string>
 #include <vector>
+#include <atomic>
 #include "../models/Movie.h"
 
 namespace movie_parser::parsers {

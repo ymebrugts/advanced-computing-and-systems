@@ -4,12 +4,13 @@
  * @date 2025-09-24
  */
 
- // movie_parser/algorithms/movie_rate.cpp
-#include "movie_rate.h"
-#include "rating_distance.h"
 #include <limits>
 #include <unordered_set>
+#include <cmath>
+#include "movie_rate.h"
+#include "rating_distance.h"
 #include "../models/PearsonResult.h"
+
 
 namespace movie_parser::algorithms {
     PearsonResult compute_pearson_similarity(

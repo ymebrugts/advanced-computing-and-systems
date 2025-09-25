@@ -22,7 +22,7 @@
 #include "Services/search_service.h"
 #include "Services/terminal_service.h"
 #include <find_all_by_member.h>
-
+#include <atomic>
 #include "cmdline_utils.h"
 #include "rating_parser.h"
 #include "parser_service.h"

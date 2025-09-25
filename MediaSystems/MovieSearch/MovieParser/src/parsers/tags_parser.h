@@ -7,6 +7,7 @@
 
 #include <string>
 #include <vector>
+#include <atomic>
 #include "../models/MovieTag.h"
 
 namespace movie_parser::parsers {

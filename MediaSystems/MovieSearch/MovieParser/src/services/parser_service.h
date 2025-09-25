@@ -2,6 +2,7 @@
 
 #include <future>
 #include <vector>
+#include <unordered_map>
 
 #include "../models/MovieTag.h"
 #include "../parsers/movie_parser.h"

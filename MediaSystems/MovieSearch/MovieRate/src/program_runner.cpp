@@ -23,11 +23,12 @@
 
 #include "cmdline_utils.h"
 #include "rating_parser.h"
-#include "parser_service.h"
+#include <parser_service.h>
 #include <numeric>
 #include <unordered_set>
 #include <rating_distance.h>
-
+#include <unordered_map>
+#include <atomic>
 #include "movie_rate.h"
 #include "utils/overlap.h"
 

@@ -17,4 +17,6 @@ namespace movie_parser::utils {
      * @param ratings_index progress 0-100 for map indexes preload
      */
     void print_progress_top_right(int movies, int tags, int ratings, int movies_index, int tags_index, int ratings_index);
+
+    void init_progress_row();
 }

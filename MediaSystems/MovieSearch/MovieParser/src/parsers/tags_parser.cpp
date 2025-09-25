@@ -1,6 +1,10 @@
 #include <string>
 #include <vector>
 #include <fstream>
+#include <atomic>
+#include <algorithm>
+#include <iterator>
+#include <unordered_map>
 
 #include "string_utils.h"
 #include "../models/MovieTag.h"

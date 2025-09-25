@@ -2,10 +2,12 @@
 #include <string>
 #include <vector>
 #include <fstream>
+#include <ranges>
+#include <atomic>
+#include <unordered_map>
 
 #include "../models/Movie.h"
 #include "string_utils.h"
-#include <ranges>
 
 namespace movie_parser::parsers
 {

@@ -1,11 +1,12 @@
+#include <future>
+#include <iostream>
+#include <utility>
+#include <unordered_map>
+
 #include "parser_service.h"
 #include "../parsers/movie_parser.h"
 #include "../parsers/rating_parser.h"
 #include "../parsers/tags_parser.h"
-
-#include <future>
-#include <iostream>
-#include <utility>
 #include "../utils/terminal_utils.h"
 
 

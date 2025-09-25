@@ -5,6 +5,7 @@
  */
 
 #include <iostream>
+#include "terminal_utils.h"
 #include "program_runner.h"
 
 void show_help(std::ostream& out) {
@@ -37,6 +38,8 @@ int main(int argc, char** argv) {
 #endif
     // Hide cursor
     std::cout << "\033[?25l";
+    
+    movie_parser::utils::init_progress_row();
 
     bool interactive_mode = true; // Default to interactive mode
 

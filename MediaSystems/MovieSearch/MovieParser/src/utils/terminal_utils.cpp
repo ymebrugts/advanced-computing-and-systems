@@ -61,6 +61,33 @@ namespace movie_parser::utils
         // Restore cursor
         std::cout << "\033[u" << std::flush;
     }
+
+    static int progress_row = -1;
+
+    void init_progress_row() {
+#ifdef _WIN32
+        CONSOLE_SCREEN_BUFFER_INFO csbi;
+        HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+        if (GetConsoleScreenBufferInfo(hConsole, &csbi)) {
+            progress_row = csbi.dwCursorPosition.Y + 1; // Windows is 0-based
+        }
+#else
+        struct termios saved, raw;
+        tcgetattr(STDIN_FILENO, &saved);
+        raw = saved;
+        raw.c_lflag &= ~(ICANON | ECHO);
+        tcsetattr(STDIN_FILENO, TCSANOW, &raw);
+
+        std::cout << "\033[6n" << std::flush; // Request cursor position
+
+        int row, col;
+        if (scanf("\033[%d;%dR", &row, &col) == 2) {
+            progress_row = row;
+        }
+
+        tcsetattr(STDIN_FILENO, TCSANOW, &saved);
+#endif
+    }
 }
 
 
