@@ -117,7 +117,11 @@ namespace movie_parser::algorithms {
             //if (pearsonRes.correlation <= 0.0) continue;
 
             // Scarcity weighting: correlation * overlap
-            const double weight = pearsonRes.correlation * static_cast<double>(pearsonRes.overlap);
+            // Bayesian/shrinkage significance weighting to avoid overwhelming the result just because someone rated a lot of overlapping items
+            const int n = pearsonRes.overlap;
+            constexpr int k = 25;
+            const double s = static_cast<double>(n) / (n + k);
+            const double weight = pearsonRes.correlation * s;
 
             // Neighbor mean of all their ratings (user-based CF)
             const double neighborMean = mean_of(movieMap);
