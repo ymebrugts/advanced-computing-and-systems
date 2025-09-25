@@ -94,13 +94,17 @@ void run_program(std::istream& in, std::ostream& out, bool interactive_mode) {
             auto matches = movie_search::services::search_movies(parse_result.query, movies, tags);
 
             for (const auto& movie : matches) {
+                const auto* movieRatings = parserService.get_ratings_by_movie_id(movie.movie_id);
 
                 double ratingSum = 0.0;
                 std::size_t count = 0;
 
-                for (const auto& rating : shared::utils::find_all_by_member(ratings, movie.movie_id, &movie_parser::models::MovieRating::movie_id)) {
-                    ratingSum += rating.rating;
-                    ++count;
+
+                if (movieRatings) {
+                    for (const auto& rating : *movieRatings) {
+                        ratingSum += rating.rating;
+                        ++count;
+                    }
                 }
 
                 double average = count > 0 ? ratingSum / count : 0.0;
