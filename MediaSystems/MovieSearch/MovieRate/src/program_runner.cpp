@@ -95,6 +95,13 @@ void run_program(std::istream& in, std::ostream& out, bool interactive_mode) {
             if (!result.success) {
                 out << result.error_message << "\n";
             }
+            else if (result.similar_user_id == -1 && result.distance == -1) {
+                // Pearson fallback case
+                out << "The predicted rating for UserID: " << result.target_user_id
+                    << " and MovieID: " << result.target_movie_id
+                    << " is " << result.predicted_rating
+                    << " (calculated using Pearson correlation fallback due to sparsity)\n";
+            }
             else if (result.similar_user_id == result.target_user_id) {
                 out << "User " << result.target_user_id
                     << " already rated movie " << result.target_movie_id

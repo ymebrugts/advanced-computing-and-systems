@@ -80,7 +80,7 @@ namespace movie_parser::algorithms {
         }
 
         // If similar user hasn't rated target movie
-        result.error_message = "Most similar user (" + std::to_string(mostSimilarUserId) + ") has not rated movie " + std::to_string(target_movie_id) + "so cannot be predicted.";
+        result.error_message = "Most similar user (" + std::to_string(mostSimilarUserId) + ") has not rated movie " + std::to_string(target_movie_id) + " so cannot be predicted.";
         return result;
     }
 
